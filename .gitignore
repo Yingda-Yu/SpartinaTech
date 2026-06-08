@@ -125,6 +125,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# next.js generated types
+next-env.d.ts
+
 # pnpm
 .pnpm-store
 

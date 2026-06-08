@@ -39,6 +39,12 @@ export type WallpaperCollection = {
   items: WallpaperItem[];
 };
 
+const assetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+function publicAsset(path: string): string {
+  return `${assetBasePath}${path}`;
+}
+
 export const site = {
   name: "Spartina Technology",
   shortName: "SpartinaTech",
@@ -52,15 +58,15 @@ export const site = {
 
 export const heroImages = [
   {
-    src: "/images/wallpapers/tennis-girl-summer-01.jpg",
+    src: publicAsset("/images/wallpapers/tennis-girl-summer-01.jpg"),
     alt: "AI generated summer tennis wallpaper",
   },
   {
-    src: "/images/wallpapers/green-tennis-girl-01.jpg",
+    src: publicAsset("/images/wallpapers/green-tennis-girl-01.jpg"),
     alt: "AI generated green tennis wallpaper",
   },
   {
-    src: "/images/wallpapers/sunlit-marsh-01.jpg",
+    src: publicAsset("/images/wallpapers/sunlit-marsh-01.jpg"),
     alt: "AI generated sunlit visual product",
   },
 ];
@@ -176,42 +182,42 @@ export const wallpaperCollections: WallpaperCollection[] = [
       {
         id: "tennis-girl-summer",
         alt: "Wallpaper: tennis girl in summer",
-        imageSrc: "/images/wallpapers/tennis-girl-summer-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/tennis-girl-summer-01.jpg"),
       },
       {
         id: "green-tennis-girl",
         alt: "Wallpaper: tennis girl surrounded by greenery",
-        imageSrc: "/images/wallpapers/green-tennis-girl-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/green-tennis-girl-01.jpg"),
       },
       {
         id: "sunlit-tennis",
         alt: "Wallpaper: tennis under sunlight",
-        imageSrc: "/images/wallpapers/sunlit-tennis-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/sunlit-tennis-01.jpg"),
       },
       {
         id: "sunlit-basketball",
         alt: "Wallpaper: basketball court under sunlight",
-        imageSrc: "/images/wallpapers/sunlit-basketball-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/sunlit-basketball-01.jpg"),
       },
       {
         id: "sunlit-marsh",
         alt: "Wallpaper: sunlit marsh scene",
-        imageSrc: "/images/wallpapers/sunlit-marsh-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/sunlit-marsh-01.jpg"),
       },
       {
         id: "spring-tree-cat",
         alt: "Wallpaper: spring tree and cat",
-        imageSrc: "/images/wallpapers/spring-tree-cat-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/spring-tree-cat-01.jpg"),
       },
       {
         id: "otter-character-01",
         alt: "Wallpaper: expressive otter character",
-        imageSrc: "/images/wallpapers/otter-character-01.jpg",
+        imageSrc: publicAsset("/images/wallpapers/otter-character-01.jpg"),
       },
       {
         id: "otter-character-02",
         alt: "Wallpaper: expressive otter character variant",
-        imageSrc: "/images/wallpapers/otter-character-02.jpg",
+        imageSrc: publicAsset("/images/wallpapers/otter-character-02.jpg"),
       },
     ],
   },
