@@ -6,10 +6,11 @@ digital product generation.
 ## Local Development
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>.
+Open <http://127.0.0.1:3000>.
 
 ## Content Updates
 
@@ -42,25 +43,61 @@ deployment across GitHub Pages, static hosting, and custom domains.
 npm run build
 ```
 
-This project is configured with `output: "export"`, so production builds create
-a static `out` directory that can be hosted by GitHub Pages, Cloudflare Pages,
-Netlify, Nginx, or any static file server.
+Normal builds use the default Next.js behavior. This is the correct mode for
+Vercel and other server-capable Next.js hosts.
 
 ## GitHub Pages
 
-For repository Pages under `Yingda-Yu.github.io/SpartinaTech`, build with:
+GitHub Pages deploys automatically when `main` is pushed. The workflow is:
 
-```bash
-GITHUB_PAGES=true npm run build
+- `.github/workflows/deploy.yml`
+- build command: `npm run build`
+- required environment:
+  - `GITHUB_PAGES=true`
+  - `NEXT_PUBLIC_BASE_PATH=/SpartinaTech`
+
+The public URL is:
+
+```txt
+https://yingda-yu.github.io/SpartinaTech/
 ```
 
-The `GITHUB_PAGES=true` flag enables the `/SpartinaTech` base path.
+For local verification of the GitHub Pages static export on Windows PowerShell:
 
-For a custom root domain such as `spartinatech.com`, build normally:
-
-```bash
+```powershell
+$env:GITHUB_PAGES="true"
+$env:NEXT_PUBLIC_BASE_PATH="/SpartinaTech"
 npm run build
+Remove-Item Env:\GITHUB_PAGES
+Remove-Item Env:\NEXT_PUBLIC_BASE_PATH
 ```
+
+This mode enables:
+
+- `output: "export"`
+- `basePath: "/SpartinaTech"`
+- `assetPrefix: "/SpartinaTech/"`
+- `images.unoptimized: true`
+
+## Vercel
+
+Vercel should use the normal Next.js build mode.
+
+1. Log in to Vercel.
+2. Choose **Import Git Repository**.
+3. Select `Yingda-Yu/SpartinaTech`.
+4. Keep **Framework Preset** as `Next.js`.
+5. Do not set `GITHUB_PAGES`.
+6. Do not set `NEXT_PUBLIC_BASE_PATH`.
+7. Click **Deploy**.
+
+Vercel should serve the site from the root path:
+
+```txt
+https://your-project.vercel.app/
+```
+
+It should not require `/SpartinaTech` in the URL.
 
 ## Future Product Upgrade
 
