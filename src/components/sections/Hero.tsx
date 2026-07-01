@@ -1,109 +1,107 @@
-import Image from "next/image";
-import { heroImages, metrics, site } from "@/lib/data";
+﻿"use client";
+
+import { useI18n } from "@/lib/i18n";
+import { useReveal, useParallax } from "@/hooks";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+const videos = [
+  {
+    src: `${basePath}/assets/videos/audit-radar.mp4`,
+    poster: `${basePath}/assets/posters/audit-radar.jpg`,
+    num: "01",
+    title: "Dataset Audit",
+    labelKey: "heroVideo1",
+    large: true,
+    parallax: "-0.04",
+  },
+  {
+    src: `${basePath}/assets/videos/synthetic-generation.mp4`,
+    poster: `${basePath}/assets/posters/synthetic-generation.jpg`,
+    num: "02",
+    title: "Synthetic Generation",
+    labelKey: "heroVideo2",
+    large: false,
+    parallax: "0.035",
+  },
+  {
+    src: `${basePath}/assets/videos/quality-filter.mp4`,
+    poster: `${basePath}/assets/posters/quality-filter.jpg`,
+    num: "03",
+    title: "Quality Filtering",
+    labelKey: "heroVideo3",
+    large: false,
+    parallax: "-0.025",
+  },
+  {
+    src: `${basePath}/assets/videos/benchmark-loop.mp4`,
+    poster: `${basePath}/assets/posters/benchmark-loop.jpg`,
+    num: "04",
+    title: "Benchmark Report",
+    labelKey: "heroVideo4",
+    wide: true,
+    parallax: "0.045",
+  },
+];
 
 export function Hero() {
+  const { t } = useI18n();
+  const ref = useReveal();
+  useParallax();
+
   return (
-    <section
-      id="top"
-      className="relative flex min-h-[calc(100dvh-1rem)] flex-col justify-center overflow-hidden px-6 pb-12 pt-20 sm:px-8 lg:px-10"
-    >
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[#f7f4ee]"
-        aria-hidden
-      />
-      <div
-        className="hero-gradient pointer-events-none absolute inset-0 -z-10 opacity-90"
-        aria-hidden
-      />
-      <div
-        className="hero-noise pointer-events-none absolute inset-0 -z-10 opacity-[0.03]"
-        aria-hidden
-      />
+    <section id="top" className="hero" ref={ref}>
+      {/* Background: orbs + grid-noise */}
+      <div className="orb orb-1" aria-hidden="true" />
+      <div className="orb orb-2" aria-hidden="true" />
+      <div className="orb orb-3" aria-hidden="true" />
+      <div className="grid-noise" aria-hidden="true" />
 
-      <div className="mx-auto grid w-full max-w-[1200px] items-center gap-14 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
-        <div>
-          <p className="mb-7 text-xs font-medium uppercase tracking-[0.22em] text-[#5f615f]">
-            AI-native digital product studio
-          </p>
-          <h1 className="max-w-4xl text-[clamp(3.4rem,8vw,6.7rem)] font-semibold leading-[0.95] tracking-tight text-[#111111]">
-            {site.shortName}
-          </h1>
-          <p className="mt-8 max-w-2xl text-xl leading-[1.55] text-[#2d2d2d] sm:text-2xl">
-            {site.tagline}
-          </p>
-          <p className="mt-5 max-w-2xl text-[15px] leading-[1.8] text-[#666666] sm:text-base">
-            {site.positioning}
-          </p>
-
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#contact"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#2f4738]"
-            >
-              {site.primaryCta}
-            </a>
-            <a
-              href="#work"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-[#111111]/15 bg-white/60 px-6 text-sm font-semibold text-[#111111] backdrop-blur transition-colors hover:bg-white"
-            >
-              {site.secondaryCta}
-            </a>
-          </div>
-
-          <dl className="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-[#111111]/10 pt-6">
-            {metrics.map((metric) => (
-              <div key={metric.value}>
-                <dt className="text-xl font-semibold text-[#111111]">
-                  {metric.value}
-                </dt>
-                <dd className="mt-1 text-xs leading-relaxed text-[#666666]">
-                  {metric.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
+      {/* Left: hero copy */}
+      <div className="hero-copy reveal">
+        <p className="eyebrow">{t("heroEyebrow")}</p>
+        <h1>{t("heroTitle")}</h1>
+        <p className="hero-subtitle">{t("heroSubtitle")}</p>
+        <p className="hero-body">{t("heroBody")}</p>
+        <div className="hero-actions">
+          <a className="button-primary" href="#contact">
+            {t("heroCTA1")}
+          </a>
+          <a className="button-ghost" href="#loop">
+            {t("heroCTA2")}
+          </a>
         </div>
-
-        <div className="relative min-h-[560px]">
-          <div className="absolute left-2 top-6 h-[440px] w-[198px] overflow-hidden rounded-[26px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/15 sm:left-10">
-            <Image
-              src={heroImages[0].src}
-              alt={heroImages[0].alt}
-              fill
-              priority
-              className="object-cover"
-              sizes="220px"
-            />
-          </div>
-          <div className="absolute right-0 top-0 h-[520px] w-[234px] overflow-hidden rounded-[30px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/20 sm:right-8">
-            <Image
-              src={heroImages[1].src}
-              alt={heroImages[1].alt}
-              fill
-              priority
-              className="object-cover"
-              sizes="260px"
-            />
-          </div>
-          <div className="absolute bottom-0 left-[22%] h-[360px] w-[162px] overflow-hidden rounded-[24px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/15">
-            <Image
-              src={heroImages[2].src}
-              alt={heroImages[2].alt}
-              fill
-              className="object-cover"
-              sizes="180px"
-            />
-          </div>
-          <div className="absolute bottom-10 right-4 max-w-[260px] rounded-lg border border-[#111111]/10 bg-white/85 p-4 shadow-xl shadow-[#5a4b36]/10 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#2f4738]">
-              Output pack
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-[#333333]">
-              Prompt direction, curated variants, channel-ready image assets,
-              and reusable generation rules.
-            </p>
-          </div>
+        <div className="hero-note">
+          <span>Build Better Data</span>
+          <span className="hero-note-sep">/</span>
+          <span>Better Inspection</span>
         </div>
+      </div>
+
+      {/* Right: video wall grid */}
+      <div className="hero-studio reveal" aria-label="Video demo wall">
+        {videos.map((v) => (
+          <article
+            key={v.num}
+            className={`studio-card${v.large ? " studio-large" : ""}${v.wide ? " studio-wide" : ""}`}
+            data-parallax={v.parallax}
+          >
+            <div
+              className="studio-card-media"
+              style={{ backgroundImage: `url(${v.poster})` }}
+            >
+              <video autoPlay muted loop playsInline poster={v.poster}>
+                <source src={v.src} type="video/mp4" />
+              </video>
+              <span className="video-placeholder-badge">VIDEO</span>
+            </div>
+            <div className="card-label">
+              <span>{v.num}</span>
+              <strong>{v.title}</strong>
+              <small>{t(v.labelKey)}</small>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );

@@ -1,7 +1,20 @@
-# Spartina Technology
+# Spartina Technology / 米草科技
 
-Company website for Spartina Technology, an AI-native studio for multimodal
-digital product generation.
+Official company website for **Spartina Technology** -- an AI-powered Industrial Vision Data Enhancement Platform.
+
+## About
+
+Spartina Technology builds AI solutions for industrial vision, using Generative AI (GAN, Diffusion Models, Foundation Models) to solve data scarcity, class imbalance, long-tail defects, and cross-production-line generalization in industrial inspection.
+
+**Target Industries**: PCB/AOI, Steel/Metal Surface, Semiconductor, Lithium Battery, Solar Panel, and more.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **UI**: React 19 + Tailwind CSS 4
+- **Language**: TypeScript
+- **Design**: Dark theme inspired by kling.ai -- glassmorphism, gradient accents, premium tech aesthetic
+- **i18n**: Bilingual support (English / Chinese)
 
 ## Local Development
 
@@ -10,32 +23,42 @@ npm install
 npm run dev
 ```
 
-Open <http://127.0.0.1:3000>.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000).
+
+## Project Structure
+
+```
+src/
+  app/
+    layout.tsx          # Root layout (dark theme, metadata, Inter font)
+    page.tsx            # Homepage (section assembly)
+    globals.css         # Design tokens, glassmorphism, animations
+  components/
+    sections/
+      Hero.tsx          # Full-screen hero with gradient glows
+      ProductModes.tsx  # Core capabilities (4 cards)
+      Workflow.tsx      # AI data enhancement pipeline (4 steps)
+      AISystems.tsx     # AI technology systems (5 systems, 3 categories)
+      StudioIdentity.tsx# About us section
+      Contact.tsx       # Contact / Book a Demo section
+    ui/
+      SiteHeader.tsx    # Glassmorphism nav with language switcher
+      Section.tsx       # Reusable section wrapper
+  lib/
+    data.ts             # All site content (bilingual i18n data)
+    utils.ts            # Utility functions
+```
 
 ## Content Updates
 
-Most public website content lives in:
+Most public website content lives in `src/lib/data.ts`. Use it to update:
 
-```txt
-src/lib/data.ts
-```
-
-Use it to update:
-
-- Brand name, tagline, and homepage positioning
-- Product modes and workflow copy
-- AI system cards
-- Wallpaper/product collections
-- Contact links
-
-Static assets live in:
-
-```txt
-public/images
-```
-
-Prefer lowercase ASCII filenames such as `tennis-girl-summer-01.jpg` for stable
-deployment across GitHub Pages, static hosting, and custom domains.
+- Company name, tagline, and positioning
+- Core capability descriptions
+- AI system cards and categories
+- Workflow steps
+- Contact information
+- i18n translations (English / Chinese)
 
 ## Build
 
@@ -43,8 +66,7 @@ deployment across GitHub Pages, static hosting, and custom domains.
 npm run build
 ```
 
-Normal builds use the default Next.js behavior. This is the correct mode for
-Vercel and other server-capable Next.js hosts.
+Normal builds use the default Next.js behavior. This is the correct mode for Vercel and other server-capable Next.js hosts.
 
 ## GitHub Pages
 
@@ -58,7 +80,7 @@ GitHub Pages deploys automatically when `main` is pushed. The workflow is:
 
 The public URL is:
 
-```txt
+```
 https://yingda-yu.github.io/SpartinaTech/
 ```
 
@@ -72,13 +94,6 @@ Remove-Item Env:\GITHUB_PAGES
 Remove-Item Env:\NEXT_PUBLIC_BASE_PATH
 ```
 
-This mode enables:
-
-- `output: "export"`
-- `basePath: "/SpartinaTech"`
-- `assetPrefix: "/SpartinaTech/"`
-- `images.unoptimized: true`
-
 ## Vercel
 
 Vercel should use the normal Next.js build mode.
@@ -91,17 +106,6 @@ Vercel should use the normal Next.js build mode.
 6. Do not set `NEXT_PUBLIC_BASE_PATH`.
 7. Click **Deploy**.
 
-Vercel should serve the site from the root path:
+## License
 
-```txt
-https://your-project.vercel.app/
-```
-
-It should not require `/SpartinaTech` in the URL.
-
-## Future Product Upgrade
-
-If the site grows into a full product with login, payments, generated-asset
-management, or AI job queues, deploy it to a server-capable platform such as
-Vercel, AWS, Alibaba Cloud, Tencent Cloud, or a VPS, and remove the static export
-constraint.
+All rights reserved. Spartina Technology.

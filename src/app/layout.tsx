@@ -14,25 +14,25 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Spartina Technology",
-    template: "%s - Spartina Technology",
+    default: "米草科技 / Spartina Technology",
+    template: "%s - 米草科技",
   },
   description:
-    "Spartina Technology builds multimodal digital products, AI-generated image and video assets, visual product drops, and custom generation workflows.",
+    "基于生成式AI的工业视觉数据增强平台，面向PCB、钢材表面、半导体、锂电池等行业的缺陷检测合成数据生成与模型增强。",
   openGraph: {
-    title: "Spartina Technology",
+    title: "米草科技 / Spartina Technology",
     description:
-      "Multimodal digital product generation for image, video, and AI-native commerce.",
+      "基于生成式AI的工业视觉数据增强平台，面向PCB、钢材表面、半导体、锂电池等行业的缺陷检测合成数据生成与模型增强。",
     url: siteUrl,
-    siteName: "Spartina Technology",
-    locale: "en_US",
+    siteName: "米草科技",
+    locale: "zh_CN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Spartina Technology",
+    title: "米草科技 / Spartina Technology",
     description:
-      "Multimodal digital product generation for image, video, and AI-native commerce.",
+      "基于生成式AI的工业视觉数据增强平台，面向PCB、钢材表面、半导体、锂电池等行业的缺陷检测合成数据生成与模型增强。",
   },
 };
 
@@ -43,11 +43,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="zh"
       data-scroll-behavior="smooth"
       className={`${inter.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-[#ffffff] text-[#0a0a0a]">
+      <body className="flex min-h-full flex-col">
         {children}
       </body>
     </html>
