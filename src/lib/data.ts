@@ -382,8 +382,8 @@ export const workflowSteps: WorkflowStep[] = [
 ];
 
 export const contact = {
-  email: "yuying76@gmail.com",
-  github: "https://github.com/Yingda-Yu/SpartinaTech",
+  email: "yuyingda76@gmail.com",
+  github: "https://github.com/Yingda-Yu",
 };
 
 export const site = {

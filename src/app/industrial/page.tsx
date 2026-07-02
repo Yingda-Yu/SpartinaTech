@@ -524,7 +524,7 @@ export default function IndustrialPage() {
                 {pickIndustrialLocale(industrialPage.contact.primaryCta, locale)}
               </a>
               <a
-                href="mailto:yuying76@gmail.com"
+                href="mailto:yuyingda76@gmail.com"
                 className="inline-flex h-12 items-center justify-center rounded-full border border-[#1a2a27] bg-[#1a2a27]/40 px-7 text-sm font-semibold text-white transition-all hover:bg-[#1a2a27]"
               >
                 {pickIndustrialLocale(industrialPage.contact.secondaryCta, locale)}
