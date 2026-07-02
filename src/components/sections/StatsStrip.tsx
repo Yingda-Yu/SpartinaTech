@@ -17,9 +17,9 @@ export function StatsStrip() {
   return (
     <section className="stats-strip" aria-label="Key metrics" ref={ref}>
       {stats.map((s) => (
-        <div key={s.labelKey} className="stat reveal">
-          <strong>{s.value}</strong>
-          <span>{t(s.labelKey)}</span>
+        <div key={s.labelKey} className="stat-item reveal">
+          <span className="stat-value">{s.value}</span>
+          <span className="stat-label">{t(s.labelKey)}</span>
         </div>
       ))}
     </section>

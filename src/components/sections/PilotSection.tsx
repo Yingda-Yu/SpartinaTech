@@ -22,10 +22,10 @@ export function PilotSection() {
           <h2>{t("pilotTitle")}</h2>
         </div>
         <div className="pilot-grid">
-          {steps.map((step) => (
-            <article key={step.titleKey} className="pilot-step reveal">
+          {steps.map((step, index) => (
+            <article key={step.titleKey} className="pilot-step reveal" style={{ '--stagger': index } as React.CSSProperties}>
               <div className="step-number">{step.time.trim()}</div>
-              <small>{t(step.unitKey)}</small>
+              <small className="step-unit">{t(step.unitKey)}</small>
               <h3>{t(step.titleKey)}</h3>
               <p>{t(step.bodyKey)}</p>
             </article>

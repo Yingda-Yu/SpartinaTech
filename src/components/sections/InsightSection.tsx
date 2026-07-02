@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useI18n } from "@/lib/i18n";
 import { useReveal } from "@/hooks";
@@ -26,7 +26,10 @@ export function InsightSection() {
             {bars.map((b) => (
               <div key={b.label} className="bar-group">
                 <span className="bar-value">{b.score}</span>
-                <div className={`bar ${b.variant === "danger" ? "secondary" : "primary"}`} style={{ height: `${parseFloat(b.pct) / 100 * 200}px` }} />
+                <div
+                  className={`bar ${b.variant === "danger" ? "secondary" : "primary"}`}
+                  style={{ height: `${parseFloat(b.pct) / 100 * 240}px` } as React.CSSProperties}
+                />
                 <span className="bar-label">{b.label}</span>
               </div>
             ))}

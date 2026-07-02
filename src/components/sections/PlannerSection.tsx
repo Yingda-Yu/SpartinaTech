@@ -22,11 +22,11 @@ export function PlannerSection() {
           <p className="body-text">{t("plannerBody")}</p>
         </div>
         <div className="priority-grid">
-          {priorities.map((p) => (
-            <article key={p.level} className={`priority-card ${p.level} reveal`}>
+          {priorities.map((p, index) => (
+            <article key={p.level} className={`priority-card ${p.level} reveal`} style={{ '--stagger': index } as React.CSSProperties}>
               <h3>{t(p.labelKey)}</h3>
-              <p>{t(p.titleKey)}</p>
-              <p>{t(p.bodyKey)}</p>
+              <p className="priority-title">{t(p.titleKey)}</p>
+              <p className="priority-desc">{t(p.bodyKey)}</p>
             </article>
           ))}
         </div>

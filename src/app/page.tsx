@@ -29,30 +29,30 @@ function Footer() {
         <div className="footer-col">
           <h4>Platform</h4>
           <ul>
-            <li><a href="#platform">Dataset Audit</a></li>
-            <li><a href="#loop">Enhancement Loop</a></li>
-            <li><a href="#demos">Video Demos</a></li>
+            <li><a className="footer-link" href="#platform">Dataset Audit</a></li>
+            <li><a className="footer-link" href="#loop">Enhancement Loop</a></li>
+            <li><a className="footer-link" href="#demos">Video Demos</a></li>
           </ul>
         </div>
         <div className="footer-col">
           <h4>Solutions</h4>
           <ul>
-            <li><a href="#solutions">PCB / AOI</a></li>
-            <li><a href="#solutions">Steel Surface</a></li>
-            <li><a href="#solutions">Anomaly Detection</a></li>
+            <li><a className="footer-link" href="#solutions">PCB / AOI</a></li>
+            <li><a className="footer-link" href="#solutions">Steel Surface</a></li>
+            <li><a className="footer-link" href="#solutions">Anomaly Detection</a></li>
           </ul>
         </div>
         <div className="footer-col">
           <h4>Company</h4>
           <ul>
-            <li><a href="#contact">{t("contactCTA1")}</a></li>
-            <li><a href="#pilot">{t("navPilot")}</a></li>
+            <li><a className="footer-link" href="#contact">{t("contactCTA1")}</a></li>
+            <li><a className="footer-link" href="#pilot">{t("navPilot")}</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom">
         <span>&copy; 2025 {site.name}. All rights reserved.</span>
-        <a href="#top">{t("backTop")}</a>
+        <a className="footer-link" href="#top">{t("backTop")}</a>
       </div>
     </footer>
   );

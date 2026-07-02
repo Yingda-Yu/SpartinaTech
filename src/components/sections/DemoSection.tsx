@@ -49,8 +49,8 @@ export function DemoSection() {
           <p className="body-text">{t("demoBody")}</p>
         </div>
         <div className="demo-grid">
-          {demos.map((d) => (
-            <article key={d.titleKey} className="demo-card reveal">
+          {demos.map((d, index) => (
+            <article key={d.titleKey} className="demo-card reveal" style={{ '--stagger': index } as React.CSSProperties}>
               <div className="demo-card-media" style={{ backgroundImage: `url(${d.poster})` }}>
                 <video autoPlay muted loop playsInline poster={d.poster}>
                   <source src={d.videoSrc} type="video/mp4" />

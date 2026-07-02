@@ -83,7 +83,7 @@ export function Hero() {
         {videos.map((v) => (
           <article
             key={v.num}
-            className={`studio-card${v.large ? " studio-large" : ""}${v.wide ? " studio-wide" : ""}`}
+            className="studio-card"
             data-parallax={v.parallax}
           >
             <div

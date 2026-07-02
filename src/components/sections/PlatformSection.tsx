@@ -25,8 +25,8 @@ export function PlatformSection() {
           <p className="body-text">{t("platformBody")}</p>
         </div>
         <div className="tool-rail" role="list">
-          {tools.map((tool) => (
-            <article key={tool.num} className="tool-card reveal" role="listitem">
+          {tools.map((tool, index) => (
+            <article key={tool.num} className="tool-card reveal" style={{ '--stagger': index } as React.CSSProperties} role="listitem">
               <div className="tool-icon">{tool.num}</div>
               <h3>{tool.title}</h3>
               <p>{t(tool.bodyKey)}</p>

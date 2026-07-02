@@ -30,7 +30,7 @@ export function LoopSection() {
           </div>
           <div className="timeline">
             {steps.map((step) => (
-              <div key={step.num} className="timeline-item reveal">
+              <div key={step.num} className="timeline-item reveal" style={{ '--stagger': steps.indexOf(step) } as React.CSSProperties}>
                 <div className="timeline-dot">{step.num}</div>
                 <div className="timeline-content">
                   <h3>{t(step.titleKey)}</h3>
