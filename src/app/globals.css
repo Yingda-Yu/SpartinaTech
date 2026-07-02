@@ -5,6 +5,19 @@
   --foreground: #0a0a0a;
   --muted: #666666;
   --accent: #2f4738;
+  --accent-warm: #d37942;
+  --accent-soft: #e6ce97;
+  /* Unified design tokens */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.04), 0 1px 3px rgba(10, 10, 10, 0.06);
+  --shadow-md: 0 4px 12px rgba(10, 10, 10, 0.06), 0 2px 4px rgba(10, 10, 10, 0.04);
+  --shadow-lg: 0 12px 32px rgba(10, 10, 10, 0.08), 0 4px 12px rgba(10, 10, 10, 0.05);
+  --shadow-xl: 0 24px 64px rgba(10, 10, 10, 0.10), 0 8px 24px rgba(10, 10, 10, 0.06);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @theme inline {
@@ -22,47 +35,207 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-gradient {
+/* ============================================
+   Hero background composition
+   Real image layered with blur, gradient, mask
+   ============================================ */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(2px) saturate(1.05);
+  opacity: 0.55;
+  transform: scale(1.05);
+  animation: hero-drift 24s ease-in-out infinite;
+}
+
+.hero-bg-mask {
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(
-      ellipse 70% 55% at 16% 22%,
-      rgba(47, 71, 56, 0.18),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 58% 52% at 80% 18%,
-      rgba(211, 121, 66, 0.15),
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 64% 90%,
-      rgba(230, 206, 151, 0.28),
-      transparent 52%
-    ),
-    linear-gradient(180deg, #fffaf1 0%, #f3f5ef 100%);
+    radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, rgba(255, 255, 255, 0.4) 60%, rgba(255, 250, 241, 0.85) 100%),
+    linear-gradient(180deg, rgba(255, 250, 241, 0.3) 0%, rgba(243, 245, 239, 0.6) 100%);
 }
 
-.hero-noise {
+.hero-bg-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-bg-orb-1 {
+  top: -10%;
+  right: -5%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 600px;
+  max-height: 600px;
+  background: radial-gradient(circle, rgba(47, 71, 56, 0.18) 0%, transparent 70%);
+  animation: orb-float 18s ease-in-out infinite;
+}
+
+.hero-bg-orb-2 {
+  bottom: -10%;
+  left: -5%;
+  width: 35vw;
+  height: 35vw;
+  max-width: 500px;
+  max-height: 500px;
+  background: radial-gradient(circle, rgba(211, 121, 66, 0.12) 0%, transparent 70%);
+  animation: orb-float 22s ease-in-out infinite reverse;
+}
+
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.4;
+  background-image:
+    linear-gradient(rgba(47, 71, 56, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 71, 56, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 30%, transparent 80%);
+}
+
+.hero-bg-noise {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: hero-noise-drift 8s steps(10) infinite;
+  pointer-events: none;
 }
 
-@keyframes hero-noise-drift {
-  0% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(-2%, 2%);
-  }
-  50% {
-    transform: translate(2%, -1%);
-  }
-  75% {
-    transform: translate(-1%, -2%);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
+@keyframes hero-drift {
+  0%, 100% { transform: scale(1.05) translate(0, 0); }
+  50% { transform: scale(1.08) translate(-1%, 1%); }
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, -2%) scale(1.05); }
+  66% { transform: translate(-1%, 2%) scale(0.98); }
+}
+
+/* ============================================
+   Scroll-reveal animations
+   ============================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal-in-view {
+  animation: fade-up 0.9s var(--ease-out) forwards;
+}
+
+.reveal-left {
+  animation: slide-in-left 0.9s var(--ease-out) forwards;
+}
+
+.reveal-right {
+  animation: slide-in-right 0.9s var(--ease-out) forwards;
+}
+
+/* ============================================
+   Industrial page — deep black-green theme
+   ============================================ */
+.industrial-grid {
+  background-image:
+    linear-gradient(rgba(165, 212, 188, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(165, 212, 188, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes tab-underline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ============================================
+   Utility — image hover treatment
+   ============================================ */
+.img-zoom {
+  transition: transform 0.7s var(--ease-out);
+}
+
+.group:hover .img-zoom {
+  transform: scale(1.04);
+}
+
+/* Smooth focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Custom scrollbar for a more polished feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(10, 10, 10, 0.15);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 10, 10, 0.3);
+  background-clip: padding-box;
 }
