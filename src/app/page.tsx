@@ -6,10 +6,12 @@ import { VideoShowcase } from "@/components/sections/VideoShowcase";
 import { VisualProofSection } from "@/components/sections/VisualProofSection";
 import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { Contact } from "@/components/sections/Contact";
+import PreloadImages from "@/components/ui/PreloadImages";
 
 export default function Home() {
   return (
     <div className="flex min-h-full flex-1 flex-col">
+      <PreloadImages />
       <SiteHeader />
       <main className="flex-1">
         <Hero />

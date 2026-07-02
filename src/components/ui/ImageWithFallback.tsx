@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { assetPath, getFallbackPath } from "@/lib/asset-path";
 
 interface ImageWithFallbackProps {
@@ -26,32 +26,41 @@ export function ImageWithFallback({
   fetchPriority,
   sizes,
 }: ImageWithFallbackProps) {
-  const [state, setState] = useState<"loading" | "loaded" | "error">("loading");
-  const [currentSrc, setCurrentSrc] = useState(assetPath(src));
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    setState("loading");
-    setCurrentSrc(assetPath(src));
-  }, [src]);
-
-  const handleError = () => {
-    if (currentSrc.endsWith(".webp")) {
-      const fallback = assetPath(getFallbackPath(src));
-      setCurrentSrc(fallback);
-      setState("loading");
-    } else {
-      setState("error");
-    }
-  };
+  const webpSrc = assetPath(src);
+  const pngSrc = assetPath(getFallbackPath(src));
 
   const actualLoading = loading ?? (priority ? "eager" : "lazy");
   const actualFetchPriority = fetchPriority ?? (priority ? "high" : "auto");
 
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [src]);
+
+  const handleLoad = () => {
+    setLoaded(true);
+    setFailed(false);
+  };
+
+  const handleError = () => {
+    setFailed(true);
+    setLoaded(false);
+  };
+
   return (
     <div className={`relative overflow-hidden ${aspectRatio} ${wrapperClassName}`}>
-      {state === "loading" && (
+      {!loaded && !failed && (
         <div
-          className="absolute inset-0 z-0 bg-gradient-to-br from-[#f5f5f2] via-[#f0f0ed] to-[#f5f5f2]"
+          className="absolute inset-0 z-0"
           style={{
             backgroundImage:
               "linear-gradient(135deg, #f5f5f2 0%, #ecece7 50%, #f5f5f2 100%)",
@@ -68,40 +77,45 @@ export function ImageWithFallback({
         </div>
       )}
 
-      {state !== "error" && (
-        // eslint-disable-next-line @next/next/no-img-element
+      <picture>
+        <source srcSet={webpSrc} type="image/webp" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={currentSrc}
+          ref={imgRef}
+          src={pngSrc}
           alt={alt}
           loading={actualLoading}
           fetchPriority={actualFetchPriority}
+          decoding="async"
           sizes={sizes}
           className={`absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300 ease-out ${
-            state === "loaded" ? "opacity-100" : "opacity-0"
+            loaded && !failed ? "opacity-100" : "opacity-0"
           } ${className}`}
-          onLoad={() => setState("loaded")}
+          onLoad={handleLoad}
           onError={handleError}
         />
-      )}
+      </picture>
 
-      {state === "error" && (
+      {failed && (
         <div
-          className="absolute inset-0 z-0 flex items-center justify-center bg-gradient-to-br from-[#f5f5f2] to-[#e8e8e3]"
+          className="absolute inset-0 z-20 flex items-center justify-center"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, #f5f5f2 0%, #e8e8e3 100%)",
+          }}
           aria-hidden
         >
-          <div className="text-center">
-            <svg
-              className="mx-auto h-10 w-10 text-[#2f4738]/20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
-          </div>
+          <svg
+            className="h-10 w-10 text-[#2f4738]/20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
         </div>
       )}
     </div>
@@ -124,30 +138,39 @@ export function DarkImageWithFallback({
   fetchPriority,
   sizes,
 }: DarkImageWithFallbackProps) {
-  const [state, setState] = useState<"loading" | "loaded" | "error">("loading");
-  const [currentSrc, setCurrentSrc] = useState(assetPath(src));
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    setState("loading");
-    setCurrentSrc(assetPath(src));
-  }, [src]);
-
-  const handleError = () => {
-    if (currentSrc.endsWith(".webp")) {
-      const fallback = assetPath(getFallbackPath(src));
-      setCurrentSrc(fallback);
-      setState("loading");
-    } else {
-      setState("error");
-    }
-  };
+  const webpSrc = assetPath(src);
+  const pngSrc = assetPath(getFallbackPath(src));
 
   const actualLoading = loading ?? (priority ? "eager" : "lazy");
   const actualFetchPriority = fetchPriority ?? (priority ? "high" : "auto");
 
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [src]);
+
+  const handleLoad = () => {
+    setLoaded(true);
+    setFailed(false);
+  };
+
+  const handleError = () => {
+    setFailed(true);
+    setLoaded(false);
+  };
+
   return (
     <div className={`relative overflow-hidden ${aspectRatio} ${wrapperClassName}`}>
-      {state === "loading" && (
+      {!loaded && !failed && (
         <div
           className="absolute inset-0 z-0 bg-[#0f1a18]"
           style={{
@@ -157,25 +180,28 @@ export function DarkImageWithFallback({
         />
       )}
 
-      {state !== "error" && (
-        // eslint-disable-next-line @next/next/no-img-element
+      <picture>
+        <source srcSet={webpSrc} type="image/webp" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={currentSrc}
+          ref={imgRef}
+          src={pngSrc}
           alt={alt}
           loading={actualLoading}
           fetchPriority={actualFetchPriority}
+          decoding="async"
           sizes={sizes}
           className={`absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300 ease-out ${
-            state === "loaded" ? "opacity-100" : "opacity-0"
+            loaded && !failed ? "opacity-100" : "opacity-0"
           } ${className}`}
-          onLoad={() => setState("loaded")}
+          onLoad={handleLoad}
           onError={handleError}
         />
-      )}
+      </picture>
 
-      {state === "error" && (
+      {failed && (
         <div
-          className="absolute inset-0 z-0 flex items-center justify-center bg-[#0f1a18]"
+          className="absolute inset-0 z-20 flex items-center justify-center bg-[#0f1a18]"
           style={{
             backgroundImage: `radial-gradient(circle at 50% 40%, ${accentColor}0a 0%, transparent 65%)`,
           }}
