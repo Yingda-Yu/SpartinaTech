@@ -254,6 +254,7 @@ export default function IndustrialPage() {
                     alt={pickIndustrialLocale(tab.title, locale)}
                     aspectRatio="aspect-[4/3]"
                     accentColor="#a5d4bc"
+                    priority={activeTab === 0}
                   />
                   {/* Stage chip */}
                   <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full bg-[#0a100f]/80 px-3 py-1.5 backdrop-blur-md">
@@ -339,6 +340,7 @@ export default function IndustrialPage() {
                     alt={pickIndustrialLocale(industrialPage.workflowDashboard.title, locale)}
                     aspectRatio="aspect-[16/10]"
                     accentColor="#a5d4bc"
+                    priority
                   />
                 </div>
               </div>

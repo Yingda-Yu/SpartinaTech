@@ -34,7 +34,7 @@ export const industrialPage = {
       "我们不只是生成更多图片。我们诊断缺失什么，控制缺陷类型与形态，验证增强后的数据集是否真正提升模型效果。"
     ),
   },
-  coverImage: publicAsset("/images/industrial/industrial-demo-cover.png"),
+  coverImage: publicAsset("/images/industrial/industrial-demo-cover.webp"),
   whyItMatters: {
     eyebrow: ls("Why It Matters", "为什么重要"),
     title: ls("Five problems we solve.", "五个我们解决的核心问题。"),
@@ -104,7 +104,7 @@ export const industrialPage = {
         "We profile class distribution, defect coverage, and imbalance before generating anything. You see exactly what's missing.",
         "在生成任何内容之前，我们先分析类别分布、缺陷覆盖度与样本不平衡问题。你能清楚看到缺什么。"
       ),
-      image: publicAsset("/images/industrial/dataset-audit.png"),
+      image: publicAsset("/images/industrial/dataset-audit.webp"),
       points: lsa(
         ["Class distribution analysis", "Defect coverage map", "Imbalance & rarity report"],
         ["类别分布分析", "缺陷覆盖度图谱", "不平衡与稀有性报告"]
@@ -118,7 +118,7 @@ export const industrialPage = {
         "Diffusion-based synthesis with defect type, position, scale, and morphology control. Each output is industrially meaningful, not just visually plausible.",
         "基于扩散的合成方式，可控制缺陷类型、位置、尺度与形态。每个输出都具备工业意义，而不仅仅是视觉上说得过去。"
       ),
-      image: publicAsset("/images/industrial/synthetic-generation.png"),
+      image: publicAsset("/images/industrial/synthetic-generation.webp"),
       points: lsa(
         ["Defect type & morphology control", "Position and scale constraints", "Style-locked to your line"],
         ["缺陷类型与形态控制", "位置与尺度约束", "与你的产线风格一致"]
@@ -132,7 +132,7 @@ export const industrialPage = {
         "Automated and human-in-the-loop screening rejects artifacts and out-of-distribution samples before they contaminate your training set.",
         "自动化与人机协作的筛选机制，在伪影与分布外样本污染训练集之前就将其排除。"
       ),
-      image: publicAsset("/images/industrial/quality-filtering.png"),
+      image: publicAsset("/images/industrial/quality-filtering.webp"),
       points: lsa(
         ["Artifact detection", "Distribution drift check", "Human-in-the-loop review"],
         ["伪影检测", "分布漂移检查", "人机协作审核"]
@@ -146,7 +146,7 @@ export const industrialPage = {
         "We run before/after benchmarks so you see the actual model improvement, not just image counts. Reports are delivered alongside the dataset.",
         "我们运行增强前后的基准测试，让你看到模型的实际提升，而不只是图片数量。报告随数据集一起交付。"
       ),
-      image: publicAsset("/images/industrial/benchmark-report.png"),
+      image: publicAsset("/images/industrial/benchmark-report.webp"),
       points: lsa(
         ["Before/after mAP comparison", "Per-class lift analysis", "Edge-case recall check"],
         ["增强前后 mAP 对比", "分类别提升分析", "边缘案例召回检查"]
@@ -155,8 +155,8 @@ export const industrialPage = {
   ],
   // Larger feature images used elsewhere on the page
   featureImages: {
-    workflowDashboard: publicAsset("/images/industrial/workflow-dashboard.png"),
-    beforeAfterPackage: publicAsset("/images/industrial/before-after-package.png"),
+    workflowDashboard: publicAsset("/images/industrial/workflow-dashboard.webp"),
+    beforeAfterPackage: publicAsset("/images/industrial/before-after-package.webp"),
   },
   workflowDashboard: {
     eyebrow: ls("Workflow Dashboard", "工作流仪表盘"),

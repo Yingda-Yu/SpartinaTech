@@ -1,10 +1,25 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { heroBackground } from "@/lib/data";
+import { getFallbackPath } from "@/lib/asset-path";
 
 export function Hero() {
   const { t } = useTranslation();
+  const [loaded, setLoaded] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(heroBackground);
+
+  useEffect(() => {
+    setLoaded(false);
+    setCurrentSrc(heroBackground);
+  }, [heroBackground]);
+
+  const handleError = () => {
+    if (currentSrc.endsWith(".webp")) {
+      setCurrentSrc(getFallbackPath(heroBackground));
+    }
+  };
 
   return (
     <section
@@ -13,11 +28,27 @@ export function Hero() {
     >
       {/* Background composition: real image + blur + gradient + mask + orbs + grid + noise */}
       <div className="hero-bg" aria-hidden>
+        {/* Skeleton background */}
+        <div
+          className={`absolute inset-0 transition-opacity duration-700 ${
+            loaded ? "opacity-0" : "opacity-100"
+          }`}
+          style={{
+            background:
+              "linear-gradient(135deg, #f5f5f2 0%, #e8e8e0 25%, #f0efe9 50%, #e8e8e0 75%, #f5f5f2 100%)",
+          }}
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={heroBackground}
+          src={currentSrc}
           alt=""
-          className="hero-bg-image"
+          className={`hero-bg-image transition-opacity duration-700 ${
+            loaded ? "opacity-100" : "opacity-0"
+          }`}
+          loading="eager"
+          fetchPriority="high"
+          onLoad={() => setLoaded(true)}
+          onError={handleError}
         />
         <div className="hero-bg-mask" />
       </div>

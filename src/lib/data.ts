@@ -60,8 +60,8 @@ function publicAsset(path: string): string {
   return `${assetBasePath}${path}`;
 }
 
-export const heroBackground = publicAsset("/images/hero/abstract-ai-motion.png");
-export const demoReelPoster = publicAsset("/images/projects/demo-reel-cover.png");
+export const heroBackground = publicAsset("/images/hero/abstract-ai-motion.webp");
+export const demoReelPoster = publicAsset("/images/projects/demo-reel-cover.webp");
 
 export const solutions: ServiceItem[] = [
   {
@@ -76,7 +76,7 @@ export const solutions: ServiceItem[] = [
       ["Defect type & morphology control", "Paired mask and label output", "Dataset split and training guidance"],
       ["缺陷类型与形态控制", "成对 mask 与 label 输出", "数据集划分与训练指导"]
     ),
-    image: publicAsset("/images/services/industrial-data-enhancement.png"),
+    image: publicAsset("/images/services/industrial-data-enhancement.webp"),
     href: "/industrial",
   },
   {
@@ -91,7 +91,7 @@ export const solutions: ServiceItem[] = [
       ["Structured content pipeline", "Consistent text-image alignment", "Built for ongoing serialization"],
       ["结构化内容管线", "稳定的图文一致性", "支持持续系列化"]
     ),
-    image: publicAsset("/images/services/ai-education.png"),
+    image: publicAsset("/images/services/ai-education.webp"),
   },
   {
     id: "visual-assets",
@@ -105,7 +105,7 @@ export const solutions: ServiceItem[] = [
       ["Style-locked batch generation", "Multi-channel format export", "Deliverable asset packages"],
       ["风格锁定的批量生成", "多渠道格式导出", "可交付的资产包"]
     ),
-    image: publicAsset("/images/services/ai-visual-assets.png"),
+    image: publicAsset("/images/services/ai-visual-assets.webp"),
   },
   {
     id: "game-film",
@@ -119,7 +119,7 @@ export const solutions: ServiceItem[] = [
       ["Rapid concept iteration", "Worldview consistency", "Studio-friendly delivery"],
       ["快速概念迭代", "世界观一致性", "适配工作室的交付方式"]
     ),
-    image: publicAsset("/images/services/game-film-assets.png"),
+    image: publicAsset("/images/services/game-film-assets.webp"),
   },
   {
     id: "custom-workflow",
@@ -133,7 +133,7 @@ export const solutions: ServiceItem[] = [
       ["Reusable production systems", "Enterprise-grade customization", "Data automation pipelines"],
       ["可复用的生产系统", "企业级定制能力", "数据自动化管线"]
     ),
-    image: publicAsset("/images/services/custom-ai-workflow.png"),
+    image: publicAsset("/images/services/custom-ai-workflow.webp"),
   },
   {
     id: "consumer-products",
@@ -147,7 +147,7 @@ export const solutions: ServiceItem[] = [
       ["Product-drop cadence", "Cross-platform output", "Subscription-ready catalogs"],
       ["产品发布节奏", "跨平台输出", "订阅就绪的内容库"]
     ),
-    image: publicAsset("/images/services/consumer-digital-products.png"),
+    image: publicAsset("/images/services/consumer-digital-products.webp"),
   },
 ];
 
@@ -172,7 +172,7 @@ export const projects: ProjectItem[] = [
       { label: ls("Generated", "生成数量"), value: "500+" },
       { label: ls("Defect Types", "缺陷类型"), value: "8+" },
     ],
-    image: publicAsset("/images/projects/industrial-demo.png"),
+    image: publicAsset("/images/projects/industrial-demo.webp"),
     href: "/industrial",
   },
   {
@@ -195,7 +195,7 @@ export const projects: ProjectItem[] = [
       { label: ls("Reading Levels", "阅读等级"), value: "5" },
       { label: ls("Illustrations", "插图数量"), value: "50+" },
     ],
-    image: publicAsset("/images/projects/leo-mia-education.png"),
+    image: publicAsset("/images/projects/leo-mia-education.webp"),
   },
   {
     id: "visual-product-line",
@@ -217,7 +217,7 @@ export const projects: ProjectItem[] = [
       { label: ls("Visual Assets", "视觉资产"), value: "200+" },
       { label: ls("Collections", "系列数量"), value: "3" },
     ],
-    image: publicAsset("/images/projects/visual-product-line.png"),
+    image: publicAsset("/images/projects/visual-product-line.webp"),
   },
   {
     id: "game-film-concept",
@@ -239,7 +239,7 @@ export const projects: ProjectItem[] = [
       { label: ls("Scenes", "场景数量"), value: "15+" },
       { label: ls("Storyboard Frames", "分镜帧数量"), value: "50+" },
     ],
-    image: publicAsset("/images/projects/game-film-concept.png"),
+    image: publicAsset("/images/projects/game-film-concept.webp"),
   },
 ];
 
@@ -256,7 +256,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Few real samples", "少量真实样本"),
       to: ls("Augmented defect set", "增强后的缺陷集"),
     },
-    image: publicAsset("/images/visual-proof/industrial-defect-samples.png"),
+    image: publicAsset("/images/visual-proof/industrial-defect-samples.webp"),
   },
   {
     id: "education-illustration",
@@ -270,7 +270,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Reading passage", "阅读文本"),
       to: ls("Illustrated page", "插图页面"),
     },
-    image: publicAsset("/images/visual-proof/education-illustration.png"),
+    image: publicAsset("/images/visual-proof/education-illustration.webp"),
   },
   {
     id: "game-character",
@@ -284,7 +284,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Character brief", "角色说明"),
       to: ls("Concept sheet", "概念图集"),
     },
-    image: publicAsset("/images/visual-proof/game-character-concept.png"),
+    image: publicAsset("/images/visual-proof/game-character-concept.webp"),
   },
   {
     id: "film-storyboard",
@@ -298,7 +298,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Scene description", "场景描述"),
       to: ls("Storyboard frame", "分镜帧"),
     },
-    image: publicAsset("/images/visual-proof/film-storyboard-frame.png"),
+    image: publicAsset("/images/visual-proof/film-storyboard-frame.webp"),
   },
   {
     id: "brand-visual",
@@ -312,7 +312,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Brand brief", "品牌简介"),
       to: ls("Visual kit", "视觉套件"),
     },
-    image: publicAsset("/images/visual-proof/brand-visual-package.png"),
+    image: publicAsset("/images/visual-proof/brand-visual-package.webp"),
   },
   {
     id: "wallpaper-collection",
@@ -326,7 +326,7 @@ export const visualProofItems: VisualProofItem[] = [
       from: ls("Theme prompt", "主题提示词"),
       to: ls("Wallpaper drop", "壁纸发布"),
     },
-    image: publicAsset("/images/visual-proof/wallpaper-collection.png"),
+    image: publicAsset("/images/visual-proof/wallpaper-collection.webp"),
   },
 ];
 
@@ -416,5 +416,5 @@ export const wallpaperCollections = [
 export const videoAssets = {
   demoReel: publicAsset("/videos/demo-reel.mp4"),
   industrialDemo: publicAsset("/videos/industrial-demo.mp4"),
-  demoReelPoster: publicAsset("/images/projects/demo-reel-cover.png"),
+  demoReelPoster: publicAsset("/images/projects/demo-reel-cover.webp"),
 };
