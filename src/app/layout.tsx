@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -48,7 +49,7 @@ export default function RootLayout({
       className={`${inter.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[#ffffff] text-[#0a0a0a]">
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

@@ -1,108 +1,94 @@
-import Image from "next/image";
-import { heroImages, metrics, site } from "@/lib/data";
+"use client";
+
+import { useTranslation } from "@/lib/i18n";
+import { heroBackground } from "@/lib/data";
 
 export function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section
       id="top"
-      className="relative flex min-h-[calc(100dvh-1rem)] flex-col justify-center overflow-hidden px-6 pb-12 pt-20 sm:px-8 lg:px-10"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pb-20 pt-24 sm:px-8 lg:px-10"
     >
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[#f7f4ee]"
-        aria-hidden
-      />
-      <div
-        className="hero-gradient pointer-events-none absolute inset-0 -z-10 opacity-90"
-        aria-hidden
-      />
-      <div
-        className="hero-noise pointer-events-none absolute inset-0 -z-10 opacity-[0.03]"
-        aria-hidden
-      />
+      {/* Background composition: real image + blur + gradient + mask + orbs + grid + noise */}
+      <div className="hero-bg" aria-hidden>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={heroBackground}
+          alt=""
+          className="hero-bg-image"
+        />
+        <div className="hero-bg-mask" />
+      </div>
+      <div className="hero-bg-grid" aria-hidden />
+      <div className="hero-bg-noise" aria-hidden />
+      <div className="hero-bg-orb hero-bg-orb-1" aria-hidden />
+      <div className="hero-bg-orb hero-bg-orb-2" aria-hidden />
 
-      <div className="mx-auto grid w-full max-w-[1200px] items-center gap-14 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
-        <div>
-          <p className="mb-7 text-xs font-medium uppercase tracking-[0.22em] text-[#5f615f]">
-            AI-native digital product studio
-          </p>
-          <h1 className="max-w-4xl text-[clamp(3.4rem,8vw,6.7rem)] font-semibold leading-[0.95] tracking-tight text-[#111111]">
-            {site.shortName}
-          </h1>
-          <p className="mt-8 max-w-2xl text-xl leading-[1.55] text-[#2d2d2d] sm:text-2xl">
-            {site.tagline}
-          </p>
-          <p className="mt-5 max-w-2xl text-[15px] leading-[1.8] text-[#666666] sm:text-base">
-            {site.positioning}
-          </p>
+      {/* Content — only slogan, subtitle, three CTAs */}
+      <div className="relative z-10 mx-auto w-full max-w-[920px] text-center">
+        <p
+          className="mb-10 text-[11px] font-medium uppercase tracking-[0.4em] text-[#5f615f] opacity-0"
+          style={{ animation: "fade-up 0.9s var(--ease-out) 0.1s forwards" }}
+        >
+          {t("hero.tagline", "Spartina Technology · 米草科技")}
+        </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#contact"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#2f4738]"
-            >
-              {site.primaryCta}
-            </a>
-            <a
-              href="#work"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-[#111111]/15 bg-white/60 px-6 text-sm font-semibold text-[#111111] backdrop-blur transition-colors hover:bg-white"
-            >
-              {site.secondaryCta}
-            </a>
-          </div>
+        <h1
+          className="text-[clamp(2.6rem,8.5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.02em] text-[#0a0a0a] opacity-0"
+          style={{ animation: "fade-up 1s var(--ease-out) 0.25s forwards" }}
+        >
+          {t("hero.titleLine1", "Generating digital products")}
+          <br />
+          <span className="bg-gradient-to-r from-[#2f4738] via-[#3d5a4a] to-[#2f4738] bg-clip-text text-transparent">
+            {t("hero.titleLine2", "for a more beautiful real life.")}
+          </span>
+        </h1>
 
-          <dl className="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-[#111111]/10 pt-6">
-            {metrics.map((metric) => (
-              <div key={metric.value}>
-                <dt className="text-xl font-semibold text-[#111111]">
-                  {metric.value}
-                </dt>
-                <dd className="mt-1 text-xs leading-relaxed text-[#666666]">
-                  {metric.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <p
+          className="mx-auto mt-8 max-w-[34rem] text-base leading-[1.65] text-[#4a4a4a] sm:text-lg opacity-0"
+          style={{ animation: "fade-up 1s var(--ease-out) 0.45s forwards" }}
+        >
+          {t("hero.subtitle")}
+        </p>
+
+        <div
+          className="mt-12 flex flex-wrap items-center justify-center gap-3 opacity-0"
+          style={{ animation: "fade-up 1s var(--ease-out) 0.65s forwards" }}
+        >
+          <a
+            href="#what-we-build"
+            className="inline-flex h-12 items-center justify-center rounded-full bg-[#0a0a0a] px-7 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[#2f4738] hover:shadow-xl hover:shadow-[#2f4738]/20"
+          >
+            {t("hero.explore", "Explore")}
+          </a>
+          <a
+            href="#demo-reel"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#0a0a0a]/15 bg-white/70 px-7 text-sm font-semibold text-[#0a0a0a] backdrop-blur-md transition-all duration-300 hover:border-[#0a0a0a]/25 hover:bg-white hover:shadow-md"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            {t("hero.watchDemo", "Watch Demo")}
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex h-12 items-center justify-center rounded-full border border-[#2f4738]/30 bg-[#2f4738]/5 px-7 text-sm font-semibold text-[#2f4738] backdrop-blur-md transition-all duration-300 hover:bg-[#2f4738]/10 hover:border-[#2f4738]/40"
+          >
+            {t("hero.contact", "Contact")}
+          </a>
         </div>
+      </div>
 
-        <div className="relative min-h-[560px]">
-          <div className="absolute left-2 top-6 h-[440px] w-[198px] overflow-hidden rounded-[26px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/15 sm:left-10">
-            <Image
-              src={heroImages[0].src}
-              alt={heroImages[0].alt}
-              fill
-              priority
-              className="object-cover"
-              sizes="220px"
-            />
-          </div>
-          <div className="absolute right-0 top-0 h-[520px] w-[234px] overflow-hidden rounded-[30px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/20 sm:right-8">
-            <Image
-              src={heroImages[1].src}
-              alt={heroImages[1].alt}
-              fill
-              priority
-              className="object-cover"
-              sizes="260px"
-            />
-          </div>
-          <div className="absolute bottom-0 left-[22%] h-[360px] w-[162px] overflow-hidden rounded-[24px] border border-white/70 bg-white shadow-2xl shadow-[#5a4b36]/15">
-            <Image
-              src={heroImages[2].src}
-              alt={heroImages[2].alt}
-              fill
-              className="object-cover"
-              sizes="180px"
-            />
-          </div>
-          <div className="absolute bottom-10 right-4 max-w-[260px] rounded-lg border border-[#111111]/10 bg-white/85 p-4 shadow-xl shadow-[#5a4b36]/10 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#2f4738]">
-              Output pack
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-[#333333]">
-              Prompt direction, curated variants, channel-ready image assets,
-              and reusable generation rules.
-            </p>
-          </div>
+      {/* Scroll hint */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0"
+        style={{ animation: "fade-in 1s ease-out 1.2s forwards" }}
+        aria-hidden
+      >
+        <div className="flex h-9 w-5 items-start justify-center rounded-full border border-[#0a0a0a]/20 p-1.5">
+          <div className="h-2 w-0.5 rounded-full bg-[#0a0a0a]/40 animate-bounce" />
         </div>
       </div>
     </section>
