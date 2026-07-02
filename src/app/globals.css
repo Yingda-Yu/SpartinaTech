@@ -147,22 +147,32 @@ a {
 
 .nav-item {
   position: relative;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  transition: color 0.25s ease;
+  text-decoration: none;
   padding: 4px 0;
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
-  border-radius: 0;
-  transition: color 0.2s;
-  cursor: pointer;
 }
-
 .nav-item:hover,
 .nav-item:focus-visible {
   color: #fff;
 }
-
 .nav-item.active {
   color: #fff;
+}
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--accent);
+  transition: width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.nav-item:hover::after {
+  width: 100%;
 }
 
 /* Mega Menu */
@@ -357,28 +367,34 @@ a {
 
 /* ========== Mobile Menu ========== */
 .mobile-menu {
-  display: none;
-}
-
-.mobile-menu.open {
-  display: flex;
-  flex-direction: column;
   position: fixed;
   top: var(--header);
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--paper);
-  padding: 24px;
-  gap: 0;
-  z-index: 999;
+  background: rgba(6, 16, 20, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 90;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-
-.mobile-menu.open a {
+.mobile-menu.open {
+  transform: translateX(0);
+}
+.mobile-menu a {
   font-size: 1.1rem;
   font-weight: 600;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--line);
+  color: rgba(255,255,255,0.7);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.mobile-menu a:hover {
+  color: #fff;
 }
 
 /* ========== Hero Section ========== */
@@ -1452,6 +1468,55 @@ a {
   border-color: rgba(118, 255, 207, 0.3);
 }
 
+/* ========== Pricing Card (kling.ai inspired, for future use) ========== */
+.pricing-card {
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 40px rgba(118, 255, 207, 0.08);
+}
+.pricing-card .plan-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.pricing-card .plan-price {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+}
+.pricing-card .plan-price span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+}
+.pricing-card .plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.pricing-card .plan-features li {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.5;
+}
+.pricing-card .plan-features li::before {
+  content: '\2713';
+  color: var(--accent);
+  margin-right: 10px;
+  font-weight: 700;
+}
+
 /* ========== Responsive: 1100px ========== */
 @media (max-width: 1100px) {
   .hero {
@@ -1509,6 +1574,10 @@ a {
     padding: 0 20px;
   }
 
+  .hero-copy .eyebrow {
+    font-size: 0.68rem;
+  }
+
   .hero-studio {
     grid-template-columns: 1fr;
     padding: 0 20px;
@@ -1518,20 +1587,50 @@ a {
     display: none;
   }
 
+  /* Nav items - kling.ai keeps visible, we hide on mobile */
+  .desktop-nav {
+    display: none;
+  }
+
+  .mega-menu {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* CTA button mobile sizing */
+  .header-actions .button-primary,
+  .header-actions .primary-small {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    height: 28px;
+  }
+
+  .header-actions .client-link,
+  .header-actions .lang-toggle {
+    display: none;
+  }
+
+  /* Stats strip mobile */
   .stats-strip {
     flex-direction: column;
     gap: 12px;
     margin-top: -24px;
-    padding: 24px;
+    padding: 16px 0;
   }
-
   .stats-strip .stat-value {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
+  }
+  .stats-strip .stat-label {
+    font-size: 0.7rem;
   }
 
+  /* Section padding mobile */
   .section,
   .section-dark {
-    padding: 72px 0;
+    padding: 60px 0;
   }
 
   .section > .container,
@@ -1543,20 +1642,63 @@ a {
     margin-bottom: 40px;
   }
 
-  .platform-section .tool-rail {
-    flex-wrap: wrap;
+  /* Card radius mobile */
+  .studio-card,
+  .demo-card {
+    border-radius: 8px;
   }
 
-  .platform-section .tool-card {
-    flex: 1 1 calc(50% - 8px);
+  /* Tool rail mobile - single column */
+  .tool-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tool-card {
+    width: 100%;
   }
 
-  .loop-section .loop-grid {
+  /* Demo grid mobile */
+  .demo-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .demo-card {
+    width: 100%;
+  }
+
+  /* Solutions grid mobile */
+  .solutions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .solution-card {
+    width: 100%;
+  }
+
+  /* Deliverables list mobile */
+  .deliverables-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .deliverable-item {
+    width: 100%;
+  }
+
+  /* Pilot steps mobile */
+  .pilot-step {
+    padding: 16px;
+  }
+
+  .pilot-section .pilot-grid {
     grid-template-columns: 1fr !important;
   }
 
-  .demo-section .demo-grid {
-    grid-template-columns: 1fr !important;
+  .pilot-section .pilot-step::after {
+    display: none;
   }
 
   .insight-section .bar-chart {
@@ -1572,38 +1714,20 @@ a {
     grid-template-columns: 1fr !important;
   }
 
-  .solutions-section .solutions-grid {
-    grid-template-columns: 1fr !important;
+  /* Contact card mobile */
+  .contact-card {
+    padding: 24px 20px;
   }
 
-  .pilot-section .pilot-grid {
-    grid-template-columns: 1fr !important;
+  /* Footer mobile */
+  .footer-link {
+    font-size: 0.72rem;
   }
-
-  .pilot-section .pilot-step::after {
-    display: none;
+  .footer-col h4 {
+    font-size: 0.78rem;
   }
-
-  .desktop-nav {
-    display: none;
-  }
-
-  .mega-menu {
-    display: none;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-  }
-
-  .header-actions .client-link,
-  .header-actions .primary-small,
-  .header-actions .lang-toggle {
-    display: none;
-  }
-
-  .contact-section .contact-card {
-    padding: 36px 24px;
+  .site-footer {
+    padding: 36px 0 20px;
   }
 
   .site-footer .footer-inner {
