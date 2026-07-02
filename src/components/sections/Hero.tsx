@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useI18n } from "@/lib/i18n";
-import { useReveal, useParallax } from "@/hooks";
+import { useReveal } from "@/hooks";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -12,8 +12,6 @@ const videos = [
     num: "01",
     title: "Dataset Audit",
     labelKey: "heroVideo1",
-    large: true,
-    parallax: "-0.04",
   },
   {
     src: `${basePath}/assets/videos/synthetic-generation.mp4`,
@@ -21,8 +19,6 @@ const videos = [
     num: "02",
     title: "Synthetic Generation",
     labelKey: "heroVideo2",
-    large: false,
-    parallax: "0.035",
   },
   {
     src: `${basePath}/assets/videos/quality-filter.mp4`,
@@ -30,8 +26,6 @@ const videos = [
     num: "03",
     title: "Quality Filtering",
     labelKey: "heroVideo3",
-    large: false,
-    parallax: "-0.025",
   },
   {
     src: `${basePath}/assets/videos/benchmark-loop.mp4`,
@@ -39,15 +33,12 @@ const videos = [
     num: "04",
     title: "Benchmark Report",
     labelKey: "heroVideo4",
-    wide: true,
-    parallax: "0.045",
   },
 ];
 
 export function Hero() {
   const { t } = useI18n();
   const ref = useReveal();
-  useParallax();
 
   return (
     <section id="top" className="hero" ref={ref}>
@@ -84,7 +75,6 @@ export function Hero() {
           <article
             key={v.num}
             className="studio-card"
-            data-parallax={v.parallax}
           >
             <div
               className="studio-card-media"

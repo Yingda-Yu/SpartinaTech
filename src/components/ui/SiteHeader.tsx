@@ -43,53 +43,11 @@ export function SiteHeader() {
 
       {/* Desktop Nav */}
       <nav className="desktop-nav" aria-label="Primary navigation">
-        <div className="nav-item">
-          <a href="#platform">{t("navPlatform")}</a>
-          <div className="mega-menu" role="menu">
-            <div>
-              <p className="eyebrow">Platform Loop</p>
-              <h3>{t("megaPlatformTitle")}</h3>
-            </div>
-            <a href="#loop">
-              <span>01</span>
-              <b>Dataset Audit</b>
-              <small>{t("megaAudit")}</small>
-            </a>
-            <a href="#planner">
-              <span>02</span>
-              <b>Enhancement Planner</b>
-              <small>{t("megaPlan")}</small>
-            </a>
-            <a href="#demos">
-              <span>03</span>
-              <b>Benchmark Report</b>
-              <small>{t("megaReport")}</small>
-            </a>
-          </div>
-        </div>
-        <div className="nav-item">
-          <a href="#solutions">{t("navSolutions")}</a>
-          <div className="mega-menu compact" role="menu">
-            <a href="#solutions">
-              <span>PCB</span>
-              <b>AOI / PCB</b>
-              <small>open / short / pin-hole</small>
-            </a>
-            <a href="#solutions">
-              <span>STL</span>
-              <b>Steel Surface</b>
-              <small>scratch / crack / inclusion</small>
-            </a>
-            <a href="#solutions">
-              <span>AD</span>
-              <b>Anomaly Detection</b>
-              <small>MVTec / VisA / LOCO</small>
-            </a>
-          </div>
-        </div>
-        <a href="#demos">{t("navDemos")}</a>
-        <a href="#deliverables">{t("navDeliverables")}</a>
-        <a href="#pilot">{t("navPilot")}</a>
+        <a className="nav-item" href="#platform">{t("navPlatform")}</a>
+        <a className="nav-item" href="#solutions">{t("navSolutions")}</a>
+        <a className="nav-item" href="#demos">{t("navDemos")}</a>
+        <a className="nav-item" href="#deliverables">{t("navDeliverables")}</a>
+        <a className="nav-item" href="#pilot">{t("navPilot")}</a>
       </nav>
 
       {/* Header Actions */}

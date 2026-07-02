@@ -121,6 +121,7 @@ const translations: Record<Locale, Record<string, string>> = {
     contactBody: "米草科技 / Spartina Technology 可先以 PCB / AOI Demo 切入，再扩展钢材、纺织、玻璃、电池和半导体场景。",
     contactCTA1: "联系商务",
     contactCTA2: "查看视频 Demo",
+    footerResources: "资源中心",
     backTop: "返回顶部",
   },
   en: {
@@ -239,6 +240,7 @@ const translations: Record<Locale, Record<string, string>> = {
     contactBody: "Spartina Technology can start from the PCB / AOI demo, then expand to steel, textiles, glass, batteries, and semiconductors.",
     contactCTA1: "Contact sales",
     contactCTA2: "Watch demos",
+    footerResources: "Resources",
     backTop: "Back to top",
   },
 };
