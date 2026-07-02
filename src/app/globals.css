@@ -573,7 +573,7 @@ a {
   opacity: 0.35;
   pointer-events: none;
   z-index: 0;
-  animation: float 12s ease-in-out infinite alternate;
+  animation: orbFloat 20s ease-in-out infinite;
 }
 
 .hero .orb-1 {
@@ -583,6 +583,7 @@ a {
   top: -120px;
   right: -80px;
   animation-delay: 0s;
+  animation-duration: 20s;
 }
 
 .hero .orb-2 {
@@ -591,7 +592,8 @@ a {
   background: #4ecdc4;
   bottom: -60px;
   left: -100px;
-  animation-delay: -4s;
+  animation-delay: -7s;
+  animation-duration: 25s;
 }
 
 .hero .orb-3 {
@@ -600,13 +602,34 @@ a {
   background: #76ffcf;
   top: 40%;
   left: 50%;
-  animation-delay: -8s;
+  animation-delay: -14s;
+  animation-duration: 18s;
 }
 
-@keyframes float {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(30px, -20px, 0) scale(1.05); }
-  100% { transform: translate3d(-20px, 15px, 0) scale(0.97); }
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10px, -15px) scale(1.02); }
+  66% { transform: translate(-8px, 8px) scale(0.98); }
+}
+
+/* Hero entrance */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-copy {
+  animation: heroFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.hero-studio {
+  animation: heroFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
 }
 
 /* Grid noise overlay */
@@ -619,6 +642,21 @@ a {
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 1;
+  animation: grainShift 0.5s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -2%); }
+  20% { transform: translate(1%, -1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, 1%); }
+  50% { transform: translate(-2%, -1%); }
+  60% { transform: translate(1%, 2%); }
+  70% { transform: translate(-1%, -2%); }
+  80% { transform: translate(2%, 1%); }
+  90% { transform: translate(-2%, 2%); }
+  100% { transform: translate(0, 0); }
 }
 
 /* ========== Studio Card ========== */
@@ -858,7 +896,9 @@ a {
   border-radius: var(--radius-lg, 16px);
   background: var(--card);
   border: 1px solid var(--line);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              border-color 0.3s ease;
 }
 
 .platform-section .tool-card:hover {
@@ -977,6 +1017,17 @@ a {
   overflow: hidden;
   aspect-ratio: 16 / 10;
   position: relative;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.demo-section .demo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.demo-section .demo-card:hover::after {
+  opacity: 0.4;
 }
 
 .demo-section .demo-card::after {
@@ -1165,12 +1216,15 @@ a {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 36px 28px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              border-color 0.3s ease;
 }
 
 .solutions-section .solution-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: rgba(118, 255, 207, 0.2);
 }
 
 .solutions-section .solution-card h3 {
@@ -1360,13 +1414,13 @@ a {
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  transition: opacity 0.3s, transform 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
 }
 
 .button-primary:hover {
-  opacity: 0.88;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(118, 255, 207, 0.2);
 }
 
 .button-primary:active {
@@ -1386,14 +1440,13 @@ a {
   border: 1px solid rgba(12, 21, 24, 0.15);
   border-radius: 30px;
   cursor: pointer;
-  transition: opacity 0.3s, border-color 0.3s, transform 0.2s;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
   text-decoration: none;
 }
 
 .button-ghost:hover {
-  opacity: 0.9;
   border-color: var(--muted);
-  transform: translateY(-1px);
+  background: rgba(118, 255, 207, 0.06);
 }
 
 .section-dark .button-ghost {
@@ -1424,14 +1477,42 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ========== Section Separator ========== */
+.section-separator {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(118, 255, 207, 0.2) 50%,
+    transparent 100%
+  );
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* ========== Stats Counter Animation ========== */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-item {
+  animation: countUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.2s; }
+.stat-item:nth-child(4) { animation-delay: 0.3s; }
+.stat-item:nth-child(5) { animation-delay: 0.4s; }
+
 /* ========== Reveal Animation System ========== */
 .reveal {
   --stagger: 0;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-              transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transition-delay: calc(var(--stagger) * 0.08s);
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: calc(var(--stagger) * 0.1s);
+  will-change: opacity, transform;
 }
 .reveal.visible {
   opacity: 1;
@@ -2025,5 +2106,21 @@ a {
 
   .hero .orb {
     animation: none;
+  }
+
+  .hero-copy,
+  .hero-studio {
+    animation: none;
+    opacity: 1;
+  }
+
+  .hero .grid-noise {
+    animation: none;
+  }
+
+  .stat-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
