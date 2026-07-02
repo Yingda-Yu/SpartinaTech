@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @theme inline {
   --color-bg: #f3f6f2;
@@ -43,6 +43,80 @@
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
+
+/* 鈹€鈹€ Light Theme Variables (kling.ai /dev pattern) 鈹€鈹€ */
+body.light {
+  --accent: #0b8a1b;
+  --accent-hover: #0da01f;
+  --dark: #f7f8fa;
+  --dark-2: #ecedf0;
+  --text: rgb(18, 19, 20);
+  --text-muted: rgb(94, 98, 102);
+  --text-faint: rgb(147, 150, 153);
+  --line: rgb(206, 210, 214);
+  --card-bg: rgb(255, 255, 255);
+  --card-border: rgb(206, 210, 214);
+  --glass: rgba(255, 255, 255, 0.7);
+  color-scheme: light;
+}
+body.light .section-dark {
+  background: var(--dark-2);
+}
+body.light .section-dark h2,
+body.light .section-dark p,
+body.light .section-dark h3 {
+  color: var(--text);
+}
+body.light .site-header {
+  background: rgba(247, 248, 250, 0.92);
+  border-bottom: 1px solid var(--line);
+}
+body.light .site-header.scrolled {
+  background: rgba(247, 248, 250, 0.85);
+  backdrop-filter: blur(12px);
+}
+body.light .nav-item {
+  color: rgba(18, 19, 20, 0.7);
+}
+body.light .nav-item:hover {
+  color: rgb(18, 19, 20);
+}
+body.light .hero-copy .eyebrow {
+  color: var(--accent);
+}
+body.light .hero-copy h1 {
+  color: var(--text);
+}
+body.light .button-primary {
+  background: var(--text);
+  color: var(--dark);
+}
+body.light .button-ghost {
+  border-color: rgba(18, 19, 20, 0.15);
+  color: var(--text);
+}
+body.light .footer-link {
+  color: var(--text-muted);
+}
+body.light .footer-link:hover {
+  color: var(--accent);
+}
+body.light .stat-value {
+  color: var(--text);
+}
+body.light .stat-label {
+  color: var(--text-muted);
+}
+body.light .tool-card,
+body.light .solution-card,
+body.light .demo-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+body.light .tool-card:hover,
+body.light .solution-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
 /* ========== Global Reset & Body ========== */
 *,
 *::before,
@@ -110,9 +184,9 @@ a {
 
 .site-header.scrolled {
   height: 66px;
-  background: rgba(6, 16, 20, 0.92);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  background: rgba(6, 16, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -1517,6 +1591,193 @@ a {
   font-weight: 700;
 }
 
+
+/* 鈹€鈹€ Pricing Page Components (kling.ai /dev/pricing) 鈹€鈹€ */
+
+/* Pricing toggle buttons (Trial / 180-Day) */
+.pricing-toggle {
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.pricing-toggle-btn {
+  font-size: 0.82rem;
+  font-weight: 400;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pricing-toggle-btn.active {
+  background: var(--text);
+  color: var(--dark);
+}
+.pricing-toggle-btn:not(.active) {
+  background: rgba(9, 9, 10, 0.06);
+  color: var(--text);
+}
+
+/* API Tab (Video API / Image API) */
+.pricing-tabs {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  border-bottom: none;
+}
+.pricing-tab {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  padding: 0 0 9px;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  transition: border-color 0.2s;
+}
+.pricing-tab.active {
+  border-bottom-color: var(--accent);
+}
+
+/* Package card (exact kling.ai values) */
+.package-card {
+  background: var(--card-bg);
+  border: 1px solid rgb(206, 210, 214);
+  border-radius: 16px;
+  padding: 24px;
+  width: 280px;
+  min-width: 280px;
+  position: relative;
+  box-shadow: inset 0 -0.5px 0.5px 0 rgba(255, 255, 255, 0.16);
+  display: flex;
+  flex-direction: column;
+}
+.package-card .plan-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.7;
+  margin: 0;
+}
+.package-card .current-price {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+.package-card .original-price {
+  font-size: 1rem;
+  color: rgb(147, 150, 153);
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+.package-card .unit-price {
+  font-size: 0.75rem;
+  color: var(--text);
+  margin-top: 2px;
+}
+.package-card .divider {
+  height: 1px;
+  background: var(--line);
+  margin: 16px 0;
+  border: none;
+}
+.package-card .benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+.package-card .benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+.package-card .benefit-icon {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  color: var(--accent);
+}
+.package-card .buy-btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 64px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  background: var(--text);
+  color: var(--dark);
+  transition: opacity 0.2s;
+}
+.package-card .buy-btn:hover {
+  opacity: 0.88;
+}
+
+/* Discount badge (kling.ai corner badge) */
+.discount-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgb(8, 133, 24);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0 12px;
+  border-radius: 0 16px 0 8px;
+  line-height: 1.6;
+}
+
+/* Package carousel container */
+.package-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.package-carousel::-webkit-scrollbar {
+  height: 4px;
+}
+.package-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.package-carousel::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 2px;
+}
+.package-carousel .package-card {
+  scroll-snap-align: start;
+}
+
+/* Comparison table (kling.ai) */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.comparison-table th {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.comparison-table td {
+  padding: 12px 16px;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+  line-height: 1.5;
+}
+.comparison-table tr:nth-child(even) td {
+  background: rgba(9, 9, 10, 0.02);
+}
 /* ========== Responsive: 1100px ========== */
 @media (max-width: 1100px) {
   .hero {
