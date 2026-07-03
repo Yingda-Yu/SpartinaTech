@@ -3,7 +3,7 @@
 import { useTranslation } from "@/lib/i18n";
 import { SiteHeader } from "@/components/ui/SiteHeader";
 import { SiteFooter } from "@/components/ui/SiteFooter";
-import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { TeamMemberImage } from "@/components/ui/TeamMemberImage";
 import { advisors, coreTeam } from "@/lib/team-data";
 
 export default function TeamPage() {
@@ -45,10 +45,10 @@ export default function TeamPage() {
                   className="flex flex-col gap-6 overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:flex-row"
                 >
                   <div className="flex-shrink-0 overflow-hidden rounded-xl bg-[#f6f8f5] sm:w-48">
-                    <ImageWithFallback
+                    <TeamMemberImage
                       src={member.image}
                       alt={member.name.en}
-                      className="h-full w-full object-contain"
+                      aspectRatio="aspect-[3/4]"
                       wrapperClassName="h-64"
                     />
                   </div>
@@ -103,11 +103,11 @@ export default function TeamPage() {
                   className="flex flex-col gap-5 overflow-hidden rounded-2xl bg-[#fafafa] p-6 transition-shadow hover:shadow-md"
                 >
                   <div className="overflow-hidden rounded-xl bg-[#f6f8f5]">
-                    <ImageWithFallback
+                    <TeamMemberImage
                       src={member.image}
                       alt={member.name.en}
-                      className="h-full w-full object-contain"
-                      wrapperClassName="h-64"
+                      aspectRatio="aspect-[4/5]"
+                      wrapperClassName="h-72"
                     />
                   </div>
                   <div className="flex flex-col">

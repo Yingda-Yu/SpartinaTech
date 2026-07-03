@@ -76,73 +76,10 @@ export const coreTeam: TeamMember[] = [
     },
   },
   {
-    id: "jiaqi-xuan",
-    name: {
-      en: "Jiaqi Xuan",
-      zh: "Jiaqi Xuan",
-    },
-    role: {
-      en: "Project Partner",
-      zh: "项目伙伴",
-    },
-    bio: {
-      en: "Supports project development, content organization, and collaborative delivery.",
-      zh: "参与项目开发、内容整理与协作交付。",
-    },
-    image: "/images/team/jiaqi-xuan.webp",
-    fallback: "/images/team/jiaqi-xuan.jpg",
-    tags: {
-      en: ["Project Support", "Content", "Collaboration"],
-      zh: ["项目支持", "内容整理", "协作"],
-    },
-  },
-  {
-    id: "shuhui-shi",
-    name: {
-      en: "Shuhui Shi",
-      zh: "Shuhui Shi",
-    },
-    role: {
-      en: "AI Engineering Partner",
-      zh: "AI 工程伙伴",
-    },
-    bio: {
-      en: "Supports AI workflow implementation, experiment execution, and technical development.",
-      zh: "参与 AI 工作流实现、实验执行与技术开发。",
-    },
-    image: "/images/team/shuhui-shi.webp",
-    fallback: "/images/team/shuhui-shi.jpg",
-    tags: {
-      en: ["AI Workflow", "Engineering", "Experiment"],
-      zh: ["AI 工作流", "工程实现", "实验执行"],
-    },
-  },
-  {
-    id: "yuehan-shi",
-    name: {
-      en: "Yuehan Shi",
-      zh: "Yuehan Shi",
-    },
-    role: {
-      en: "Research Partner",
-      zh: "研究伙伴",
-    },
-    bio: {
-      en: "Supports research tasks, data organization, and project documentation.",
-      zh: "参与研究任务、数据整理与项目文档工作。",
-    },
-    image: "/images/team/yuehan-shi.webp",
-    fallback: "/images/team/yuehan-shi.jpg",
-    tags: {
-      en: ["Research", "Data", "Documentation"],
-      zh: ["研究", "数据整理", "文档"],
-    },
-  },
-  {
     id: "zhentong-ye",
     name: {
       en: "Zhentong Ye",
-      zh: "Zhentong Ye",
+      zh: "叶真同",
     },
     role: {
       en: "Industry Project Partner",
@@ -163,7 +100,7 @@ export const coreTeam: TeamMember[] = [
     id: "shuaiwu-dong",
     name: {
       en: "Shuaiwu Dong",
-      zh: "Shuaiwu Dong",
+      zh: "董帅吾",
     },
     role: {
       en: "Technical Partner",
@@ -181,9 +118,51 @@ export const coreTeam: TeamMember[] = [
     },
   },
   {
+    id: "jiaqi-xuan",
+    name: {
+      en: "Jiaqi Xuan",
+      zh: "宣佳琦",
+    },
+    role: {
+      en: "Project Partner",
+      zh: "项目伙伴",
+    },
+    bio: {
+      en: "Supports project development, content organization, and collaborative delivery.",
+      zh: "参与项目开发、内容整理与协作交付。",
+    },
+    image: "/images/team/jiaqi-xuan.webp",
+    fallback: "/images/team/jiaqi-xuan.jpg",
+    tags: {
+      en: ["Project Support", "Content", "Collaboration"],
+      zh: ["项目支持", "内容整理", "协作"],
+    },
+  },
+  {
+    id: "shuhui-shi",
+    name: {
+      en: "Shuhui Shi",
+      zh: "石姝慧",
+    },
+    role: {
+      en: "AI Engineering Partner",
+      zh: "AI 工程伙伴",
+    },
+    bio: {
+      en: "Supports AI workflow implementation, experiment execution, and technical development.",
+      zh: "参与 AI 工作流实现、实验执行与技术开发。",
+    },
+    image: "/images/team/shuhui-shi.webp",
+    fallback: "/images/team/shuhui-shi.jpg",
+    tags: {
+      en: ["AI Workflow", "Engineering", "Experiment"],
+      zh: ["AI 工作流", "工程实现", "实验执行"],
+    },
+  },
+  {
     id: "xuanyu-teng",
     name: {
-      en: "Teng Xuanyu",
+      en: "Xuanyu Teng",
       zh: "滕炫宇",
     },
     role: {
@@ -199,6 +178,27 @@ export const coreTeam: TeamMember[] = [
     tags: {
       en: ["Visual Production", "Creative Design", "Presentation"],
       zh: ["视觉生产", "创意设计", "展示材料"],
+    },
+  },
+  {
+    id: "yuehan-shi",
+    name: {
+      en: "Yuehan Shi",
+      zh: "史玥涵",
+    },
+    role: {
+      en: "Research Partner",
+      zh: "研究伙伴",
+    },
+    bio: {
+      en: "Supports research tasks, data organization, and project documentation.",
+      zh: "参与研究任务、数据整理与项目文档工作。",
+    },
+    image: "/images/team/yuehan-shi.webp",
+    fallback: "/images/team/yuehan-shi.jpg",
+    tags: {
+      en: ["Research", "Data", "Documentation"],
+      zh: ["研究", "数据整理", "文档"],
     },
   },
 ];
