@@ -47,6 +47,9 @@ export const advisors: TeamMember[] = [
       en: ["Research Advisor", "AI Applications", "Academic Collaboration"],
       zh: ["研究顾问", "AI 应用", "学术合作"],
     },
+    links: {
+      website: "https://csmt.wku.edu.cn/zh-hans/node/2000",
+    },
   },
 ];
 
@@ -175,6 +178,27 @@ export const coreTeam: TeamMember[] = [
     tags: {
       en: ["Technical Implementation", "Testing", "Workflow"],
       zh: ["技术实现", "系统测试", "工作流"],
+    },
+  },
+  {
+    id: "xuanyu-teng",
+    name: {
+      en: "Teng Xuanyu",
+      zh: "滕炫宇",
+    },
+    role: {
+      en: "Visual Production Partner",
+      zh: "视觉生产伙伴",
+    },
+    bio: {
+      en: "Supports visual asset production, creative design, and presentation materials.",
+      zh: "参与视觉资产生产、创意设计与展示材料制作。",
+    },
+    image: "/images/team/xuanyu-teng.webp",
+    fallback: "/images/team/xuanyu-teng.jpg",
+    tags: {
+      en: ["Visual Production", "Creative Design", "Presentation"],
+      zh: ["视觉生产", "创意设计", "展示材料"],
     },
   },
 ];
