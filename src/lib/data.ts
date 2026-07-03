@@ -23,6 +23,9 @@ export type ServiceItem = {
   keyPoints: LocalizedStringArray;
   image: string;
   href?: string;
+  problem?: LocalizedString;
+  deliverables?: LocalizedStringArray;
+  targetClients?: LocalizedStringArray;
 };
 
 export type ProjectItem = {
@@ -37,6 +40,9 @@ export type ProjectItem = {
   metrics: { label: LocalizedString; value: string }[];
   image: string;
   href?: string;
+  problem?: LocalizedString;
+  input?: LocalizedString;
+  process?: LocalizedStringArray;
 };
 
 export type VisualProofItem = {
@@ -78,6 +84,18 @@ export const solutions: ServiceItem[] = [
     ),
     image: publicAsset("/images/services/industrial-data-enhancement.webp"),
     href: "/industrial",
+    problem: ls(
+      "Industrial AI teams often start with too few real defect samples, making it hard to train robust inspection models.",
+      "工业 AI 团队常常面临真实缺陷样本不足的问题，难以训练出鲁棒的检测模型。"
+    ),
+    deliverables: lsa(
+      ["Augmented image sets", "Paired masks and labels", "Dataset splits", "Training guidance"],
+      ["增强图像集", "配对 mask 与标签", "数据集划分", "训练指导"]
+    ),
+    targetClients: lsa(
+      ["Manufacturers with AI inspection teams", "Quality control departments", "AI solution providers"],
+      ["有 AI 检测团队的制造企业", "质量控制部门", "AI 解决方案提供商"]
+    ),
   },
   {
     id: "ai-education",
@@ -92,6 +110,19 @@ export const solutions: ServiceItem[] = [
       ["结构化内容管线", "稳定的图文一致性", "支持持续系列化"]
     ),
     image: publicAsset("/images/services/ai-education.webp"),
+    href: "/education",
+    problem: ls(
+      "Educational content production is slow, illustrations are expensive, and maintaining consistency across a series is difficult.",
+      "教育内容生产慢、插图成本高、系列化内容难以保持一致性。"
+    ),
+    deliverables: lsa(
+      ["Leveled reading passages", "Short essays", "Children's illustrations", "Course visuals", "IP content series"],
+      ["分级阅读文章", "小作文", "儿童插图", "课程视觉", "IP 内容系列"]
+    ),
+    targetClients: lsa(
+      ["EdTech companies", "Textbook publishers", "Education content teams", "Children's media"],
+      ["教育科技公司", "教材出版社", "教育内容团队", "儿童媒体"]
+    ),
   },
   {
     id: "visual-assets",
@@ -106,6 +137,19 @@ export const solutions: ServiceItem[] = [
       ["风格锁定的批量生成", "多渠道格式导出", "可交付的资产包"]
     ),
     image: publicAsset("/images/services/ai-visual-assets.webp"),
+    href: "/visual-assets",
+    problem: ls(
+      "Brands and marketing teams need consistent, on-brand visuals at scale, but traditional production is slow and costly.",
+      "品牌和营销团队需要大规模的品牌一致视觉资产，但传统生产方式慢且成本高。"
+    ),
+    deliverables: lsa(
+      ["Product photography", "Marketing posters", "Packaging concepts", "Social media assets", "Wallpaper collections", "IP imagery"],
+      ["产品图", "营销海报", "包装概念", "社交媒体素材", "壁纸套装", "IP 图像"]
+    ),
+    targetClients: lsa(
+      ["Brand marketing teams", "E-commerce operations", "Content agencies", "SMB product teams"],
+      ["品牌营销团队", "电商运营", "内容 agency", "中小企业产品团队"]
+    ),
   },
   {
     id: "game-film",
@@ -120,6 +164,18 @@ export const solutions: ServiceItem[] = [
       ["快速概念迭代", "世界观一致性", "适配工作室的交付方式"]
     ),
     image: publicAsset("/images/services/game-film-assets.webp"),
+    problem: ls(
+      "Game and film pre-production needs rapid concept iteration, but traditional concept art pipelines are slow and expensive.",
+      "游戏和影视前期制作需要快速概念迭代，但传统概念美术流程慢且成本高。"
+    ),
+    deliverables: lsa(
+      ["Character concepts", "Environment designs", "Storyboard frames", "Props and weapons", "Promo visuals"],
+      ["角色概念", "场景设计", "分镜帧", "道具与武器", "宣传视觉"]
+    ),
+    targetClients: lsa(
+      ["Game studios", "Film production teams", "Animation studios", "Short drama teams"],
+      ["游戏工作室", "影视制作团队", "动画工作室", "短剧团队"]
+    ),
   },
   {
     id: "custom-workflow",
@@ -134,6 +190,18 @@ export const solutions: ServiceItem[] = [
       ["可复用的生产系统", "企业级定制能力", "数据自动化管线"]
     ),
     image: publicAsset("/images/services/custom-ai-workflow.webp"),
+    problem: ls(
+      "Many teams have repetitive AI tasks but lack a production-ready system to scale them reliably.",
+      "很多团队有重复性的 AI 任务，但缺乏可稳定规模化的生产级系统。"
+    ),
+    deliverables: lsa(
+      ["Custom generation pipelines", "Review and QA workflows", "Batch processing systems", "API integrations", "Delivery automation"],
+      ["定制生成管线", "审核与 QA 工作流", "批量处理系统", "API 集成", "交付自动化"]
+    ),
+    targetClients: lsa(
+      ["Enterprise innovation teams", "Content production studios", "Data teams", "Product teams building AI features"],
+      ["企业创新团队", "内容生产工作室", "数据团队", "构建 AI 功能的产品团队"]
+    ),
   },
   {
     id: "consumer-products",
@@ -148,6 +216,18 @@ export const solutions: ServiceItem[] = [
       ["产品发布节奏", "跨平台输出", "订阅就绪的内容库"]
     ),
     image: publicAsset("/images/services/consumer-digital-products.webp"),
+    problem: ls(
+      "Consumer-facing digital products need steady streams of fresh visual content to keep users engaged.",
+      "面向 C 端的数字产品需要持续的新鲜视觉内容来保持用户参与度。"
+    ),
+    deliverables: lsa(
+      ["Wallpaper collections", "IP visual sets", "Digital art drops", "Social content series", "Subscription catalogs"],
+      ["壁纸集合", "IP 视觉集", "数字艺术发布", "社交内容系列", "订阅内容库"]
+    ),
+    targetClients: lsa(
+      ["Consumer app teams", "IP and brand owners", "Content subscription platforms", "Social media creators"],
+      ["C 端应用团队", "IP 与品牌方", "内容订阅平台", "社交媒体创作者"]
+    ),
   },
 ];
 
@@ -174,6 +254,18 @@ export const projects: ProjectItem[] = [
     ],
     image: publicAsset("/images/projects/industrial-demo.webp"),
     href: "/industrial",
+    problem: ls(
+      "Training industrial defect detection models requires diverse defect samples, but real-world defect data is scarce and hard to collect.",
+      "训练工业缺陷检测模型需要多样化的缺陷样本，但真实缺陷数据稀缺且难以收集。"
+    ),
+    input: ls(
+      "20+ real industrial product images with very few defect samples.",
+      "20+ 张真实工业产品图像，缺陷样本极少。"
+    ),
+    process: lsa(
+      ["Defect morphology analysis and type classification", "Synthetic defect generation with diffusion models", "Mask and label pair generation", "Quality filtering and dataset splitting"],
+      ["缺陷形态分析与类型分类", "使用扩散模型生成合成缺陷", "Mask 与 label 配对生成", "质量过滤与数据集划分"]
+    ),
   },
   {
     id: "leo-mia-education",
@@ -196,6 +288,18 @@ export const projects: ProjectItem[] = [
       { label: ls("Illustrations", "插图数量"), value: "50+" },
     ],
     image: publicAsset("/images/projects/leo-mia-education.webp"),
+    problem: ls(
+      "Producing consistent, high-quality educational content at scale is expensive and slow — especially illustrations and leveled reading series.",
+      "规模化生产一致、高质量的教育内容成本高且速度慢——尤其是插图和分级阅读系列。"
+    ),
+    input: ls(
+      "Educational themes, target age range, and reading level specifications.",
+      "教育主题、目标年龄段和阅读等级要求。"
+    ),
+    process: lsa(
+      ["Theme and storyline planning", "Structured content generation with LLM", "Style-consistent illustration generation", "Level matching and quality review"],
+      ["主题与故事线策划", "使用 LLM 结构化生成内容", "风格一致的插图生成", "等级匹配与质量审核"]
+    ),
   },
   {
     id: "visual-product-line",
@@ -218,6 +322,18 @@ export const projects: ProjectItem[] = [
       { label: ls("Collections", "系列数量"), value: "3" },
     ],
     image: publicAsset("/images/projects/visual-product-line.webp"),
+    problem: ls(
+      "Consumer-facing products need continuous visual updates to stay relevant, but traditional production can't keep up with release cadence.",
+      "面向 C 端的产品需要持续的视觉更新来保持热度，但传统生产方式跟不上发布节奏。"
+    ),
+    input: ls(
+      "Brand guidelines, theme directions, and target platform specifications.",
+      "品牌规范、主题方向和目标平台规格。"
+    ),
+    process: lsa(
+      ["Style system and theme definition", "Batch generation with style locking", "Quality review and curation", "Multi-format export and packaging"],
+      ["风格系统与主题定义", "风格锁定的批量生成", "质量审核与筛选", "多格式导出与打包"]
+    ),
   },
   {
     id: "game-film-concept",
@@ -240,6 +356,18 @@ export const projects: ProjectItem[] = [
       { label: ls("Storyboard Frames", "分镜帧数量"), value: "50+" },
     ],
     image: publicAsset("/images/projects/game-film-concept.webp"),
+    problem: ls(
+      "Game and film pre-production requires rapid concept iteration to find the right visual direction, but traditional pipelines are time-consuming.",
+      "游戏和影视前期制作需要快速概念迭代来找到正确的视觉方向，但传统流程耗时很长。"
+    ),
+    input: ls(
+      "Worldbuilding brief, character descriptions, and reference materials.",
+      "世界观设定、角色描述和参考素材。"
+    ),
+    process: lsa(
+      ["Worldview and style exploration", "Character concept iteration", "Environment and scene design", "Storyboard and key frame generation"],
+      ["世界观与风格探索", "角色概念迭代", "场景与环境设计", "分镜与关键帧生成"]
+    ),
   },
 ];
 

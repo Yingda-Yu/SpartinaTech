@@ -159,6 +159,18 @@ export function ProjectShowcase() {
             );
           })}
         </div>
+
+        <div className="mt-20 flex justify-center">
+          <Link
+            href="/case-studies"
+            className="inline-flex items-center gap-2 rounded-full border border-[#e8eae7] bg-white px-6 py-3 text-sm font-semibold text-[#0a0a0a] transition-all hover:border-[#2f4738]/30 hover:bg-[#f6f8f5]"
+          >
+            {t("projects.viewAll", "View case studies")}
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
       </div>
     </section>
   );

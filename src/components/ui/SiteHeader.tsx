@@ -9,11 +9,10 @@ export function SiteHeader() {
   const { t } = useTranslation();
 
   const nav = [
-    { href: "#what-we-build", label: t("nav.whatWeBuild", "What We Build") },
-    { href: "#demo-reel", label: t("nav.demoReel", "Demo Reel") },
-    { href: "#visual-proof", label: t("nav.visualProof", "Visual Proof") },
+    { href: "/solutions", label: t("nav.solutions", "Solutions") },
     { href: "/industrial", label: t("nav.industrial", "Industrial") },
-    { href: "#projects", label: t("nav.projects", "Projects") },
+    { href: "/education", label: t("nav.education", "Education") },
+    { href: "/case-studies", label: t("nav.caseStudies", "Case Studies") },
     { href: "/team", label: t("nav.team", "Team") },
     { href: "#contact", label: t("nav.contact", "Contact") },
   ];
