@@ -50,7 +50,7 @@ export function SolutionMatrix() {
                       aspectRatio="aspect-[4/3]"
                       wrapperClassName="rounded-[var(--radius-lg)]"
                       className="img-zoom"
-                      priority={index < 2}
+                      priority={index < 3}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     {solution.href && (

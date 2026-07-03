@@ -6,6 +6,7 @@ import { useTranslation } from "@/lib/i18n";
 import { industrialPage, pickIndustrialLocale } from "@/lib/industrial-data";
 import { DarkImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
+import { assetPath } from "@/lib/asset-path";
 
 export default function IndustrialPage() {
   const { locale, t } = useTranslation();
@@ -18,7 +19,15 @@ export default function IndustrialPage() {
     <div className="min-h-screen bg-[#0a100f] text-white">
       <header className="fixed top-0 z-50 w-full border-b border-[#1a2a27]/40 bg-[#0a100f]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between px-6 sm:px-8 lg:px-10">
-          <Link href="/" className="text-sm font-semibold tracking-tight text-white">
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight text-white">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={assetPath("/images/brand/logo-mark.png")}
+              alt="Spartina Technology"
+              width={28}
+              height={28}
+              className="h-7 w-7 flex-shrink-0 object-contain"
+            />
             Spartina Technology
           </Link>
           <nav className="hidden flex-wrap items-center gap-5 text-sm text-[#889993] md:flex">
@@ -254,6 +263,7 @@ export default function IndustrialPage() {
                     alt={pickIndustrialLocale(tab.title, locale)}
                     aspectRatio="aspect-[4/3]"
                     accentColor="#a5d4bc"
+                    priority={activeTab === 0}
                   />
                   {/* Stage chip */}
                   <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full bg-[#0a100f]/80 px-3 py-1.5 backdrop-blur-md">
@@ -339,6 +349,7 @@ export default function IndustrialPage() {
                     alt={pickIndustrialLocale(industrialPage.workflowDashboard.title, locale)}
                     aspectRatio="aspect-[16/10]"
                     accentColor="#a5d4bc"
+                    priority
                   />
                 </div>
               </div>
@@ -522,7 +533,7 @@ export default function IndustrialPage() {
                 {pickIndustrialLocale(industrialPage.contact.primaryCta, locale)}
               </a>
               <a
-                href="mailto:yuying76@gmail.com"
+                href="mailto:yuyingda76@gmail.com"
                 className="inline-flex h-12 items-center justify-center rounded-full border border-[#1a2a27] bg-[#1a2a27]/40 px-7 text-sm font-semibold text-white transition-all hover:bg-[#1a2a27]"
               >
                 {pickIndustrialLocale(industrialPage.contact.secondaryCta, locale)}

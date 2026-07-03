@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
+import { assetPath } from "@/lib/asset-path";
 
 export function SiteHeader() {
   const { t } = useTranslation();
@@ -23,9 +24,14 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2 text-sm font-semibold tracking-tight text-[#0a0a0a]"
         >
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#0a0a0a] text-[10px] font-bold text-white">
-            S
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={assetPath("/images/brand/logo-mark.png")}
+            alt="Spartina Technology"
+            width={28}
+            height={28}
+            className="h-7 w-7 flex-shrink-0 object-contain"
+          />
           Spartina Technology
         </Link>
         <nav className="hidden flex-wrap items-center gap-6 text-sm text-[#666666] md:flex">

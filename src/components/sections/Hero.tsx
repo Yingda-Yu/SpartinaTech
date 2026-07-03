@@ -1,10 +1,38 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { heroBackground } from "@/lib/data";
+import { getFallbackPath } from "@/lib/asset-path";
 
 export function Hero() {
   const { t } = useTranslation();
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const webpSrc = heroBackground;
+  const pngSrc = getFallbackPath(heroBackground);
+
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [heroBackground]);
+
+  const handleLoad = () => {
+    setLoaded(true);
+    setFailed(false);
+  };
+
+  const handleError = () => {
+    setFailed(true);
+    setLoaded(false);
+  };
 
   return (
     <section
@@ -13,12 +41,33 @@ export function Hero() {
     >
       {/* Background composition: real image + blur + gradient + mask + orbs + grid + noise */}
       <div className="hero-bg" aria-hidden>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={heroBackground}
-          alt=""
-          className="hero-bg-image"
-        />
+        {/* Skeleton background */}
+        {!loaded && !failed && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #f5f5f2 0%, #e8e8e0 25%, #f0efe9 50%, #e8e8e0 75%, #f5f5f2 100%)",
+            }}
+          />
+        )}
+        <picture>
+          <source srcSet={webpSrc} type="image/webp" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={imgRef}
+            src={pngSrc}
+            alt=""
+            className={`hero-bg-image transition-opacity duration-700 ${
+              loaded && !failed ? "opacity-100" : "opacity-0"
+            }`}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            onLoad={handleLoad}
+            onError={handleError}
+          />
+        </picture>
         <div className="hero-bg-mask" />
       </div>
       <div className="hero-bg-grid" aria-hidden />
