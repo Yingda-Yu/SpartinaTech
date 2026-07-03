@@ -14,6 +14,7 @@ export function SiteHeader() {
     { href: "#visual-proof", label: t("nav.visualProof", "Visual Proof") },
     { href: "/industrial", label: t("nav.industrial", "Industrial") },
     { href: "#projects", label: t("nav.projects", "Projects") },
+    { href: "/team", label: t("nav.team", "Team") },
     { href: "#contact", label: t("nav.contact", "Contact") },
   ];
 
