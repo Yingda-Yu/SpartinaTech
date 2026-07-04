@@ -60,6 +60,14 @@ export type WorkflowStep = {
   description: LocalizedString;
 };
 
+export type WorkflowItem = {
+  id: string;
+  title: LocalizedString;
+  problem: LocalizedString;
+  whatWeDo: LocalizedString;
+  deliverables: LocalizedStringArray;
+};
+
 const assetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 function publicAsset(path: string): string {
@@ -190,6 +198,7 @@ export const solutions: ServiceItem[] = [
       ["可复用的生产系统", "企业级定制能力", "数据自动化管线"]
     ),
     image: publicAsset("/images/services/custom-ai-workflow.webp"),
+    href: "/workflows",
     problem: ls(
       "Many teams have repetitive AI tasks but lack a production-ready system to scale them reliably.",
       "很多团队有重复性的 AI 任务，但缺乏可稳定规模化的生产级系统。"
@@ -505,6 +514,89 @@ export const workflowSteps: WorkflowStep[] = [
     description: ls(
       "Refine based on feedback into a reusable AI production pipeline.",
       "根据反馈持续优化，形成可复用的 AI 生产管线。"
+    ),
+  },
+];
+
+export const workflows: WorkflowItem[] = [
+  {
+    id: "image-generation",
+    title: ls("Image generation workflow", "图像生成工作流"),
+    problem: ls(
+      "Teams need consistent brand imagery across campaigns, but generating on demand is unpredictable and time-consuming.",
+      "团队需要在多个营销活动中保持一致的品牌视觉，但按需生成不可预测且耗时。"
+    ),
+    whatWeDo: ls(
+      "Build style-locked generation pipelines with controlled output parameters, quality filtering, and multi-format export.",
+      "构建风格锁定的生成管线，包含可控输出参数、质量筛选和多格式导出。"
+    ),
+    deliverables: lsa(
+      ["Style reference documents", "Generation scripts", "Quality filter workflows", "Export pipelines"],
+      ["风格参考文档", "生成脚本", "质量筛选工作流", "导出管线"]
+    ),
+  },
+  {
+    id: "dataset-enhancement",
+    title: ls("Dataset enhancement workflow", "数据增强工作流"),
+    problem: ls(
+      "AI teams often lack enough training data, but manual data collection is slow and expensive.",
+      "AI 团队常常缺乏足够的训练数据，但手动数据收集速度慢且成本高。"
+    ),
+    whatWeDo: ls(
+      "Create synthetic data generation pipelines with controlled variation, paired labels, and validation workflows.",
+      "创建合成数据生成管线，包含可控变异、配对标签和验证工作流。"
+    ),
+    deliverables: lsa(
+      ["Synthetic data generator", "Label/mask pairing", "Validation workflows", "Dataset packaging"],
+      ["合成数据生成器", "标签/mask 配对", "验证工作流", "数据集打包"]
+    ),
+  },
+  {
+    id: "education-content",
+    title: ls("Education content workflow", "教育内容生产工作流"),
+    problem: ls(
+      "Educational content needs serialization, consistency, and leveled difficulty, but manual production can't scale.",
+      "教育内容需要系列化、一致性和分级难度，但手动生产无法规模化。"
+    ),
+    whatWeDo: ls(
+      "Build structured pipelines for content generation, illustration, leveling, and multi-platform publishing.",
+      "构建结构化管线，支持内容生成、插图、分级和多平台发布。"
+    ),
+    deliverables: lsa(
+      ["Content generation pipeline", "Illustration workflow", "Leveling engine", "Multi-format export"],
+      ["内容生成管线", "插图工作流", "分级引擎", "多格式导出"]
+    ),
+  },
+  {
+    id: "visual-asset-packaging",
+    title: ls("Visual asset packaging workflow", "视觉资产打包工作流"),
+    problem: ls(
+      "Brands need asset packages for launches, but coordinating design teams and format requirements is complex.",
+      "品牌在发布时需要资产包，但协调设计团队和格式要求很复杂。"
+    ),
+    whatWeDo: ls(
+      "Create end-to-end workflows that generate, review, package, and deliver visual asset collections.",
+      "创建端到端工作流，支持生成、审核、打包和交付视觉资产集合。"
+    ),
+    deliverables: lsa(
+      ["Asset generation scripts", "Review dashboards", "Packaging workflows", "Delivery pipelines"],
+      ["资产生成脚本", "审核看板", "打包工作流", "交付管线"]
+    ),
+  },
+  {
+    id: "internal-demo",
+    title: ls("Internal demo / dashboard workflow", "内部演示与看板工作流"),
+    problem: ls(
+      "Showing AI capabilities to stakeholders requires polished demos, but building them takes engineering resources.",
+      "向利益相关者展示 AI 能力需要精美的演示，但构建演示需要大量工程资源。"
+    ),
+    whatWeDo: ls(
+      "Build lightweight demo pages and dashboards that showcase AI capabilities with real-time interaction.",
+      "构建轻量级演示页面和看板，支持实时交互展示 AI 能力。"
+    ),
+    deliverables: lsa(
+      ["Demo page", "Interactive dashboard", "API integration", "Documentation"],
+      ["演示页面", "交互看板", "API 集成", "文档"]
     ),
   },
 ];
