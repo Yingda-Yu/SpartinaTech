@@ -161,28 +161,29 @@ export const solutions: ServiceItem[] = [
   },
   {
     id: "game-film",
-    title: ls("Game & Film Assets", "游戏与影视资产"),
-    subtitle: ls("Concept exploration, faster", "更快的概念探索"),
+    title: ls("Game & Interactive Assets", "游戏与互动内容资产"),
+    subtitle: ls("AI asset pipelines for mini-games", "面向小游戏的 AI 素材管线"),
     description: ls(
-      "Concept art, characters, environments, storyboards, props, and visual development materials.",
-      "生成概念图、角色、场景、分镜、道具与前期视觉开发素材。"
+      "AI-generated scenes, characters, props, controllable A/B image pairs, and level-ready annotation data for mini-games and interactive content.",
+      "为小游戏与互动内容生成场景、角色、道具、成对差异图与可用于关卡配置的标注数据。"
     ),
     keyPoints: lsa(
-      ["Rapid concept iteration", "Worldview consistency", "Studio-friendly delivery"],
-      ["快速概念迭代", "世界观一致性", "适配工作室的交付方式"]
+      ["Base image + controllable local edits", "Paired A/B images for spot-the-difference", "Difference-point labels with coordinates & hints", "Level-ready asset packages"],
+      ["原图生成 + 局部可控编辑", "找不同成对 A/B 图像", "差异点标注（坐标、提示语）", "可直接接入关卡的素材包"]
     ),
     image: publicAsset("/images/services/game-film-assets.webp"),
+    href: "/game-assets",
     problem: ls(
-      "Game and film pre-production needs rapid concept iteration, but traditional concept art pipelines are slow and expensive.",
-      "游戏和影视前期制作需要快速概念迭代，但传统概念美术流程慢且成本高。"
+      "Mini-games and interactive content need more than pretty pictures — they need paired images, controllable edits, and structured answer data that plugs into level configuration.",
+      "小游戏与互动内容需要的不仅是好看的图——还需要成对图像、可控编辑与可接入关卡配置的结构化答案数据。"
     ),
     deliverables: lsa(
-      ["Character concepts", "Environment designs", "Storyboard frames", "Props and weapons", "Promo visuals"],
-      ["角色概念", "场景设计", "分镜帧", "道具与武器", "宣传视觉"]
+      ["Character concepts", "Scene illustrations", "Prop and item assets", "A/B image pairs", "Controllable local edits", "Difference-point labels", "Level-ready asset packages"],
+      ["角色概念", "场景插图", "道具与物件资产", "成对差异图", "局部可控编辑", "差异点标注", "可用于关卡配置的素材包"]
     ),
     targetClients: lsa(
-      ["Game studios", "Film production teams", "Animation studios", "Short drama teams"],
-      ["游戏工作室", "影视制作团队", "动画工作室", "短剧团队"]
+      ["Mini-game studios", "Interactive content teams", "Children's education game teams", "Casual and puzzle game developers"],
+      ["小游戏工作室", "互动内容团队", "儿童教育游戏团队", "休闲与解谜游戏开发者"]
     ),
   },
   {
@@ -376,6 +377,51 @@ export const projects: ProjectItem[] = [
     process: lsa(
       ["Worldview and style exploration", "Character concept iteration", "Environment and scene design", "Storyboard and key frame generation"],
       ["世界观与风格探索", "角色概念迭代", "场景与环境设计", "分镜与关键帧生成"]
+    ),
+  },
+  {
+    id: "spot-the-difference-pipeline",
+    title: ls("Spot-the-Difference Content Pipeline", "找不同内容生产管线"),
+    description: ls(
+      "An internal pipeline that turns a single style brief into paired A/B images with labeled difference points and level-ready metadata for spot-the-difference gameplay.",
+      "一条内部管线，把单一风格需求转化为成对 A/B 图像，并附带标注好的差异点与可用于关卡配置的元数据，服务于找不同玩法。"
+    ),
+    category: ls("Game", "游戏"),
+    status: ls("Internal pipeline / Validated prototype", "内部管线 / 已验证原型"),
+    output: ls("Level-ready A/B image pairs + answer metadata", "可用于关卡的 A/B 图像对 + 答案元数据"),
+    deliverables: lsa(
+      ["A/B image pairs", "Labeled difference points", "Hints", "Descriptions", "Level-ready metadata"],
+      ["成对图像", "差异点标注", "提示语", "描述", "可用于关卡配置的元数据"]
+    ),
+    techStack: ["ComfyUI", "ControlNet", "Custom annotation tool", "Level JSON export"],
+    metrics: [
+      { label: ls("Pipeline Stages", "管线阶段"), value: "6" },
+      { label: ls("Difference Fields", "差异字段"), value: "5" },
+      { label: ls("Status", "状态"), value: "Validated" },
+    ],
+    image: publicAsset("/images/projects/game-film-concept.webp"),
+    href: "/game-assets",
+    problem: ls(
+      "Spot-the-difference gameplay needs two highly consistent images with clear, intentional local differences, plus accurate answer data recording where each difference lives.",
+      "找不同玩法需要两张高度一致但局部差异清晰的图片，并且需要准确记录每个差异点位置的答案数据。"
+    ),
+    input: ls(
+      "Gameplay requirements, scene style, and base prompts or reference images.",
+      "玩法需求、场景风格、基础提示词或参考图。"
+    ),
+    process: lsa(
+      [
+        "Generate the base (A) image with a ComfyUI generation pipeline",
+        "Apply a controlled local edit to produce the paired (B) image",
+        "Use the internal annotation tool to record difference coordinates, radius, hint, and description",
+        "Export the A/B pair, labels, and metadata as a level-ready package",
+      ],
+      [
+        "使用 ComfyUI 生成管线产出原始 (A) 图",
+        "进行局部可控编辑，生成配对 (B) 图",
+        "使用内部标注工具记录差异坐标、半径、提示语与描述",
+        "将 A/B 图像对、标签与元数据导出为可用于关卡的素材包",
+      ]
     ),
   },
 ];

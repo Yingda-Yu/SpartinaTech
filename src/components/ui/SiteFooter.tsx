@@ -57,6 +57,14 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
+                  href="/game-assets"
+                  className="text-sm text-[#666666] transition-colors hover:text-[#0a0a0a]"
+                >
+                  {isZh ? "游戏与互动资产" : "Game & Interactive Assets"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/workflows"
                   className="text-sm text-[#666666] transition-colors hover:text-[#0a0a0a]"
                 >

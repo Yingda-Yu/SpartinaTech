@@ -15,6 +15,7 @@ export function SiteHeader() {
     { href: "/industrial", label: t("nav.industrial", "Industrial") },
     { href: "/education", label: t("nav.education", "Education") },
     { href: "/visual-assets", label: t("nav.visualAssets", "Visual Assets") },
+    { href: "/game-assets", label: t("nav.gameAssets", "Game Assets") },
     { href: "/workflows", label: t("nav.workflows", "Workflows") },
     { href: "/case-studies", label: t("nav.caseStudies", "Cases") },
     { href: "/team", label: t("nav.team", "Team") },
@@ -39,7 +40,7 @@ export function SiteHeader() {
           Spartina Technology
         </Link>
 
-        <nav className="hidden flex-wrap items-center gap-5 text-sm text-[#666666] md:flex">
+        <nav className="hidden flex-wrap items-center gap-4 text-sm text-[#666666] lg:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -61,7 +62,7 @@ export function SiteHeader() {
           </Link>
 
           <button
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#666666] md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#666666] lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -82,7 +83,7 @@ export function SiteHeader() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-[#0a0a0a]/[0.06] bg-white md:hidden">
+        <div className="border-t border-[#0a0a0a]/[0.06] bg-white lg:hidden">
           <nav className="flex flex-col py-4">
             {nav.map((item) => (
               <Link
