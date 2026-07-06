@@ -43,6 +43,7 @@ export type ProjectItem = {
   problem?: LocalizedString;
   input?: LocalizedString;
   process?: LocalizedStringArray;
+  imageFit?: "cover" | "contain";
 };
 
 export type VisualProofItem = {
@@ -399,8 +400,9 @@ export const projects: ProjectItem[] = [
       { label: ls("Difference Fields", "差异字段"), value: "5" },
       { label: ls("Status", "状态"), value: "Validated" },
     ],
-    image: publicAsset("/images/projects/game-film-concept.webp"),
+    image: publicAsset("/images/game-assets/spot-difference-annotation.webp"),
     href: "/game-assets",
+    imageFit: "contain",
     problem: ls(
       "Spot-the-difference gameplay needs two highly consistent images with clear, intentional local differences, plus accurate answer data recording where each difference lives.",
       "找不同玩法需要两张高度一致但局部差异清晰的图片，并且需要准确记录每个差异点位置的答案数据。"

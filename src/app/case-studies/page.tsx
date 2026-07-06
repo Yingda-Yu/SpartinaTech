@@ -45,6 +45,7 @@ export default function CaseStudiesPage() {
                           src={project.image}
                           alt={pickLocale(project.title, locale)}
                           aspectRatio="aspect-[4/3]"
+                          className={project.imageFit === "contain" ? "object-contain" : ""}
                         />
                       </div>
                     </div>

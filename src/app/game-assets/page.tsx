@@ -18,7 +18,9 @@ export default function GameAssetsPage() {
   const { locale, t } = useTranslation();
   const isZh = locale === "zh";
 
-  const heroImage = assetPath("/images/projects/game-film-concept.webp");
+  const heroImage = assetPath("/images/game-assets/game-interactive-assets-hero.webp");
+  const pipelineImage = assetPath("/images/game-assets/comfyui-content-pipeline.webp");
+  const annotationImage = assetPath("/images/game-assets/spot-difference-annotation.webp");
 
   return (
     <div className="min-h-screen bg-white">
@@ -27,48 +29,51 @@ export default function GameAssetsPage() {
       <main className="pt-14">
         {/* Hero */}
         <section className="mx-auto max-w-[1200px] px-6 py-24 sm:px-8 lg:px-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.3em] text-[#5f615f]">
-              {t("gameAssets.pageEyebrow", "Game & Interactive Assets")}
-            </p>
-            <h1 className="mb-6 text-3xl font-semibold tracking-tight text-[#0a0a0a] sm:text-4xl lg:text-5xl">
-              {t("gameAssets.heroTitle", "")}
-            </h1>
-            <p className="mx-auto max-w-xl text-base leading-relaxed text-[#666666]">
-              {t("gameAssets.heroDescription", "")}
-            </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="#workflow"
-                className="inline-flex items-center gap-2 rounded-full bg-[#0a0a0a] px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#2f4738]"
-              >
-                {t("gameAssets.viewWorkflow", "View workflow")}
-                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-              <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-2 rounded-full border border-[#e8eae7] bg-white px-5 py-2.5 text-xs font-semibold text-[#0a0a0a] transition-all hover:border-[#2f4738]/30 hover:bg-[#f6f8f5]"
-              >
-                {t("gameAssets.seeCaseStudy", "See case study")}
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-[#e8eae7] bg-white px-5 py-2.5 text-xs font-semibold text-[#0a0a0a] transition-all hover:border-[#2f4738]/30 hover:bg-[#f6f8f5]"
-              >
-                {t("gameAssets.discussProject", "Discuss a game project")}
-              </Link>
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.3em] text-[#5f615f]">
+                {t("gameAssets.pageEyebrow", "Game & Interactive Assets")}
+              </p>
+              <h1 className="mb-6 text-3xl font-semibold leading-[1.1] tracking-tight text-[#0a0a0a] sm:text-4xl lg:text-5xl">
+                {t("gameAssets.heroTitle", "")}
+              </h1>
+              <p className="max-w-xl text-base leading-relaxed text-[#666666]">
+                {t("gameAssets.heroDescription", "")}
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                <Link
+                  href="#workflow"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#0a0a0a] px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#2f4738]"
+                >
+                  {t("gameAssets.viewWorkflow", "View workflow")}
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#e8eae7] bg-white px-5 py-2.5 text-xs font-semibold text-[#0a0a0a] transition-all hover:border-[#2f4738]/30 hover:bg-[#f6f8f5]"
+                >
+                  {t("gameAssets.seeCaseStudy", "See case study")}
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#e8eae7] bg-white px-5 py-2.5 text-xs font-semibold text-[#0a0a0a] transition-all hover:border-[#2f4738]/30 hover:bg-[#f6f8f5]"
+                >
+                  {t("gameAssets.discussProject", "Discuss a game project")}
+                </Link>
+              </div>
             </div>
-          </div>
 
-          <div className="mx-auto mt-16 max-w-4xl overflow-hidden rounded-2xl shadow-sm">
-            <ImageWithFallback
-              src={heroImage}
-              alt={isZh ? "游戏与互动内容资产" : "Game & Interactive Assets"}
-              aspectRatio="aspect-[16/9]"
-              priority
-            />
+            <div className="overflow-hidden rounded-[24px] bg-[#f6f8f5] shadow-sm">
+              <ImageWithFallback
+                src={heroImage}
+                alt={isZh ? "游戏与互动内容资产总览" : "Game & Interactive Assets overview"}
+                aspectRatio="aspect-[4/3]"
+                className="object-contain"
+                priority
+              />
+            </div>
           </div>
         </section>
 
@@ -169,6 +174,20 @@ export default function GameAssetsPage() {
                 </article>
               ))}
             </div>
+
+            <div className="mt-14">
+              <div className="overflow-hidden rounded-[24px] bg-white shadow-sm ring-1 ring-[#e8eae7]">
+                <ImageWithFallback
+                  src={pipelineImage}
+                  alt={isZh ? "ComfyUI 内容生成管线" : "ComfyUI content pipeline"}
+                  aspectRatio="aspect-[16/9]"
+                  className="object-contain"
+                />
+              </div>
+              <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-[#666666]">
+                {t("gameAssets.workflowImageCaption", "")}
+              </p>
+            </div>
           </div>
         </section>
 
@@ -197,11 +216,12 @@ export default function GameAssetsPage() {
                   ))}
                 </ul>
               </div>
-              <div className="overflow-hidden rounded-2xl shadow-sm">
+              <div className="overflow-hidden rounded-[24px] bg-[#f6f8f5] shadow-sm">
                 <ImageWithFallback
-                  src={assetPath("/images/visual-proof/game-character-concept.webp")}
-                  alt={isZh ? "内部管线与标注工具" : "Internal pipeline & annotation tool"}
+                  src={annotationImage}
+                  alt={isZh ? "找不同标注工具" : "Spot-the-difference annotation tool"}
                   aspectRatio="aspect-[4/3]"
+                  className="object-contain"
                 />
               </div>
             </div>
