@@ -244,7 +244,7 @@ export const translations = {
       team: "团队",
       contact: "联系",
       gameAssets: "游戏资产",
-      getInTouch: "联系我们",
+      getInTouch: "联系合作",
       backToHome: "返回首页",
       platform: "平台",
       whyItMatters: "为什么重要",
