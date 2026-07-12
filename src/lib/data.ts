@@ -23,6 +23,9 @@ export type ServiceItem = {
   keyPoints: LocalizedStringArray;
   image: string;
   href?: string;
+  problem?: LocalizedString;
+  deliverables?: LocalizedStringArray;
+  targetClients?: LocalizedStringArray;
 };
 
 export type ProjectItem = {
@@ -37,6 +40,10 @@ export type ProjectItem = {
   metrics: { label: LocalizedString; value: string }[];
   image: string;
   href?: string;
+  problem?: LocalizedString;
+  input?: LocalizedString;
+  process?: LocalizedStringArray;
+  imageFit?: "cover" | "contain";
 };
 
 export type VisualProofItem = {
@@ -52,6 +59,14 @@ export type WorkflowStep = {
   step: string;
   title: LocalizedString;
   description: LocalizedString;
+};
+
+export type WorkflowItem = {
+  id: string;
+  title: LocalizedString;
+  problem: LocalizedString;
+  whatWeDo: LocalizedString;
+  deliverables: LocalizedStringArray;
 };
 
 const assetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -78,6 +93,18 @@ export const solutions: ServiceItem[] = [
     ),
     image: publicAsset("/images/services/industrial-data-enhancement.webp"),
     href: "/industrial",
+    problem: ls(
+      "Industrial AI teams often start with too few real defect samples, making it hard to train robust inspection models.",
+      "工业 AI 团队常常面临真实缺陷样本不足的问题，难以训练出鲁棒的检测模型。"
+    ),
+    deliverables: lsa(
+      ["Augmented image sets", "Paired masks and labels", "Dataset splits", "Training guidance"],
+      ["增强图像集", "配对 mask 与标签", "数据集划分", "训练指导"]
+    ),
+    targetClients: lsa(
+      ["Manufacturers with AI inspection teams", "Quality control departments", "AI solution providers"],
+      ["有 AI 检测团队的制造企业", "质量控制部门", "AI 解决方案提供商"]
+    ),
   },
   {
     id: "ai-education",
@@ -92,6 +119,19 @@ export const solutions: ServiceItem[] = [
       ["结构化内容管线", "稳定的图文一致性", "支持持续系列化"]
     ),
     image: publicAsset("/images/services/ai-education.webp"),
+    href: "/education",
+    problem: ls(
+      "Educational content production is slow, illustrations are expensive, and maintaining consistency across a series is difficult.",
+      "教育内容生产慢、插图成本高、系列化内容难以保持一致性。"
+    ),
+    deliverables: lsa(
+      ["Leveled reading passages", "Short essays", "Children's illustrations", "Course visuals", "IP content series"],
+      ["分级阅读文章", "小作文", "儿童插图", "课程视觉", "IP 内容系列"]
+    ),
+    targetClients: lsa(
+      ["EdTech companies", "Textbook publishers", "Education content teams", "Children's media"],
+      ["教育科技公司", "教材出版社", "教育内容团队", "儿童媒体"]
+    ),
   },
   {
     id: "visual-assets",
@@ -106,20 +146,46 @@ export const solutions: ServiceItem[] = [
       ["风格锁定的批量生成", "多渠道格式导出", "可交付的资产包"]
     ),
     image: publicAsset("/images/services/ai-visual-assets.webp"),
+    href: "/visual-assets",
+    problem: ls(
+      "Brands and marketing teams need consistent, on-brand visuals at scale, but traditional production is slow and costly.",
+      "品牌和营销团队需要大规模的品牌一致视觉资产，但传统生产方式慢且成本高。"
+    ),
+    deliverables: lsa(
+      ["Product photography", "Marketing posters", "Packaging concepts", "Social media assets", "Wallpaper collections", "IP imagery"],
+      ["产品图", "营销海报", "包装概念", "社交媒体素材", "壁纸套装", "IP 图像"]
+    ),
+    targetClients: lsa(
+      ["Brand marketing teams", "E-commerce operations", "Content agencies", "SMB product teams"],
+      ["品牌营销团队", "电商运营", "内容 agency", "中小企业产品团队"]
+    ),
   },
   {
     id: "game-film",
-    title: ls("Game & Film Assets", "游戏与影视资产"),
-    subtitle: ls("Concept exploration, faster", "更快的概念探索"),
+    title: ls("Game & Interactive Assets", "游戏与互动内容资产"),
+    subtitle: ls("AI asset pipelines for mini-games", "面向小游戏的 AI 素材管线"),
     description: ls(
-      "Concept art, characters, environments, storyboards, props, and visual development materials.",
-      "生成概念图、角色、场景、分镜、道具与前期视觉开发素材。"
+      "AI-generated scenes, characters, props, controllable A/B image pairs, and level-ready annotation data for mini-games and interactive content.",
+      "为小游戏与互动内容生成场景、角色、道具、成对差异图与可用于关卡配置的标注数据。"
     ),
     keyPoints: lsa(
-      ["Rapid concept iteration", "Worldview consistency", "Studio-friendly delivery"],
-      ["快速概念迭代", "世界观一致性", "适配工作室的交付方式"]
+      ["Base image + controllable local edits", "Paired A/B images for spot-the-difference", "Difference-point labels with coordinates & hints", "Level-ready asset packages"],
+      ["原图生成 + 局部可控编辑", "找不同成对 A/B 图像", "差异点标注（坐标、提示语）", "可直接接入关卡的素材包"]
     ),
     image: publicAsset("/images/services/game-film-assets.webp"),
+    href: "/game-assets",
+    problem: ls(
+      "Mini-games and interactive content need more than pretty pictures — they need paired images, controllable edits, and structured answer data that plugs into level configuration.",
+      "小游戏与互动内容需要的不仅是好看的图——还需要成对图像、可控编辑与可接入关卡配置的结构化答案数据。"
+    ),
+    deliverables: lsa(
+      ["Character concepts", "Scene illustrations", "Prop and item assets", "A/B image pairs", "Controllable local edits", "Difference-point labels", "Level-ready asset packages"],
+      ["角色概念", "场景插图", "道具与物件资产", "成对差异图", "局部可控编辑", "差异点标注", "可用于关卡配置的素材包"]
+    ),
+    targetClients: lsa(
+      ["Mini-game studios", "Interactive content teams", "Children's education game teams", "Casual and puzzle game developers"],
+      ["小游戏工作室", "互动内容团队", "儿童教育游戏团队", "休闲与解谜游戏开发者"]
+    ),
   },
   {
     id: "custom-workflow",
@@ -134,6 +200,19 @@ export const solutions: ServiceItem[] = [
       ["可复用的生产系统", "企业级定制能力", "数据自动化管线"]
     ),
     image: publicAsset("/images/services/custom-ai-workflow.webp"),
+    href: "/workflows",
+    problem: ls(
+      "Many teams have repetitive AI tasks but lack a production-ready system to scale them reliably.",
+      "很多团队有重复性的 AI 任务，但缺乏可稳定规模化的生产级系统。"
+    ),
+    deliverables: lsa(
+      ["Custom generation pipelines", "Review and QA workflows", "Batch processing systems", "API integrations", "Delivery automation"],
+      ["定制生成管线", "审核与 QA 工作流", "批量处理系统", "API 集成", "交付自动化"]
+    ),
+    targetClients: lsa(
+      ["Enterprise innovation teams", "Content production studios", "Data teams", "Product teams building AI features"],
+      ["企业创新团队", "内容生产工作室", "数据团队", "构建 AI 功能的产品团队"]
+    ),
   },
   {
     id: "consumer-products",
@@ -148,6 +227,18 @@ export const solutions: ServiceItem[] = [
       ["产品发布节奏", "跨平台输出", "订阅就绪的内容库"]
     ),
     image: publicAsset("/images/services/consumer-digital-products.webp"),
+    problem: ls(
+      "Consumer-facing digital products need steady streams of fresh visual content to keep users engaged.",
+      "面向 C 端的数字产品需要持续的新鲜视觉内容来保持用户参与度。"
+    ),
+    deliverables: lsa(
+      ["Wallpaper collections", "IP visual sets", "Digital art drops", "Social content series", "Subscription catalogs"],
+      ["壁纸集合", "IP 视觉集", "数字艺术发布", "社交内容系列", "订阅内容库"]
+    ),
+    targetClients: lsa(
+      ["Consumer app teams", "IP and brand owners", "Content subscription platforms", "Social media creators"],
+      ["C 端应用团队", "IP 与品牌方", "内容订阅平台", "社交媒体创作者"]
+    ),
   },
 ];
 
@@ -174,6 +265,18 @@ export const projects: ProjectItem[] = [
     ],
     image: publicAsset("/images/projects/industrial-demo.webp"),
     href: "/industrial",
+    problem: ls(
+      "Training industrial defect detection models requires diverse defect samples, but real-world defect data is scarce and hard to collect.",
+      "训练工业缺陷检测模型需要多样化的缺陷样本，但真实缺陷数据稀缺且难以收集。"
+    ),
+    input: ls(
+      "20+ real industrial product images with very few defect samples.",
+      "20+ 张真实工业产品图像，缺陷样本极少。"
+    ),
+    process: lsa(
+      ["Defect morphology analysis and type classification", "Synthetic defect generation with diffusion models", "Mask and label pair generation", "Quality filtering and dataset splitting"],
+      ["缺陷形态分析与类型分类", "使用扩散模型生成合成缺陷", "Mask 与 label 配对生成", "质量过滤与数据集划分"]
+    ),
   },
   {
     id: "leo-mia-education",
@@ -196,6 +299,18 @@ export const projects: ProjectItem[] = [
       { label: ls("Illustrations", "插图数量"), value: "50+" },
     ],
     image: publicAsset("/images/projects/leo-mia-education.webp"),
+    problem: ls(
+      "Producing consistent, high-quality educational content at scale is expensive and slow — especially illustrations and leveled reading series.",
+      "规模化生产一致、高质量的教育内容成本高且速度慢——尤其是插图和分级阅读系列。"
+    ),
+    input: ls(
+      "Educational themes, target age range, and reading level specifications.",
+      "教育主题、目标年龄段和阅读等级要求。"
+    ),
+    process: lsa(
+      ["Theme and storyline planning", "Structured content generation with LLM", "Style-consistent illustration generation", "Level matching and quality review"],
+      ["主题与故事线策划", "使用 LLM 结构化生成内容", "风格一致的插图生成", "等级匹配与质量审核"]
+    ),
   },
   {
     id: "visual-product-line",
@@ -218,6 +333,18 @@ export const projects: ProjectItem[] = [
       { label: ls("Collections", "系列数量"), value: "3" },
     ],
     image: publicAsset("/images/projects/visual-product-line.webp"),
+    problem: ls(
+      "Consumer-facing products need continuous visual updates to stay relevant, but traditional production can't keep up with release cadence.",
+      "面向 C 端的产品需要持续的视觉更新来保持热度，但传统生产方式跟不上发布节奏。"
+    ),
+    input: ls(
+      "Brand guidelines, theme directions, and target platform specifications.",
+      "品牌规范、主题方向和目标平台规格。"
+    ),
+    process: lsa(
+      ["Style system and theme definition", "Batch generation with style locking", "Quality review and curation", "Multi-format export and packaging"],
+      ["风格系统与主题定义", "风格锁定的批量生成", "质量审核与筛选", "多格式导出与打包"]
+    ),
   },
   {
     id: "game-film-concept",
@@ -240,6 +367,64 @@ export const projects: ProjectItem[] = [
       { label: ls("Storyboard Frames", "分镜帧数量"), value: "50+" },
     ],
     image: publicAsset("/images/projects/game-film-concept.webp"),
+    problem: ls(
+      "Game and film pre-production requires rapid concept iteration to find the right visual direction, but traditional pipelines are time-consuming.",
+      "游戏和影视前期制作需要快速概念迭代来找到正确的视觉方向，但传统流程耗时很长。"
+    ),
+    input: ls(
+      "Worldbuilding brief, character descriptions, and reference materials.",
+      "世界观设定、角色描述和参考素材。"
+    ),
+    process: lsa(
+      ["Worldview and style exploration", "Character concept iteration", "Environment and scene design", "Storyboard and key frame generation"],
+      ["世界观与风格探索", "角色概念迭代", "场景与环境设计", "分镜与关键帧生成"]
+    ),
+  },
+  {
+    id: "spot-the-difference-pipeline",
+    title: ls("Spot-the-Difference Content Pipeline", "找不同内容生产管线"),
+    description: ls(
+      "An internal pipeline that turns a single style brief into paired A/B images with labeled difference points and level-ready metadata for spot-the-difference gameplay.",
+      "一条内部管线，把单一风格需求转化为成对 A/B 图像，并附带标注好的差异点与可用于关卡配置的元数据，服务于找不同玩法。"
+    ),
+    category: ls("Game", "游戏"),
+    status: ls("Internal pipeline / Validated prototype", "内部管线 / 已验证原型"),
+    output: ls("Level-ready A/B image pairs + answer metadata", "可用于关卡的 A/B 图像对 + 答案元数据"),
+    deliverables: lsa(
+      ["A/B image pairs", "Labeled difference points", "Hints", "Descriptions", "Level-ready metadata"],
+      ["成对图像", "差异点标注", "提示语", "描述", "可用于关卡配置的元数据"]
+    ),
+    techStack: ["ComfyUI", "ControlNet", "Custom annotation tool", "Level JSON export"],
+    metrics: [
+      { label: ls("Pipeline Stages", "管线阶段"), value: "6" },
+      { label: ls("Difference Fields", "差异字段"), value: "5" },
+      { label: ls("Status", "状态"), value: "Validated" },
+    ],
+    image: publicAsset("/images/game-assets/spot-difference-annotation.webp"),
+    href: "/game-assets",
+    imageFit: "contain",
+    problem: ls(
+      "Spot-the-difference gameplay needs two highly consistent images with clear, intentional local differences, plus accurate answer data recording where each difference lives.",
+      "找不同玩法需要两张高度一致但局部差异清晰的图片，并且需要准确记录每个差异点位置的答案数据。"
+    ),
+    input: ls(
+      "Gameplay requirements, scene style, and base prompts or reference images.",
+      "玩法需求、场景风格、基础提示词或参考图。"
+    ),
+    process: lsa(
+      [
+        "Generate the base (A) image with a ComfyUI generation pipeline",
+        "Apply a controlled local edit to produce the paired (B) image",
+        "Use the internal annotation tool to record difference coordinates, radius, hint, and description",
+        "Export the A/B pair, labels, and metadata as a level-ready package",
+      ],
+      [
+        "使用 ComfyUI 生成管线产出原始 (A) 图",
+        "进行局部可控编辑，生成配对 (B) 图",
+        "使用内部标注工具记录差异坐标、半径、提示语与描述",
+        "将 A/B 图像对、标签与元数据导出为可用于关卡的素材包",
+      ]
+    ),
   },
 ];
 
@@ -377,6 +562,89 @@ export const workflowSteps: WorkflowStep[] = [
     description: ls(
       "Refine based on feedback into a reusable AI production pipeline.",
       "根据反馈持续优化，形成可复用的 AI 生产管线。"
+    ),
+  },
+];
+
+export const workflows: WorkflowItem[] = [
+  {
+    id: "image-generation",
+    title: ls("Image generation workflow", "图像生成工作流"),
+    problem: ls(
+      "Teams need consistent brand imagery across campaigns, but generating on demand is unpredictable and time-consuming.",
+      "团队需要在多个营销活动中保持一致的品牌视觉，但按需生成不可预测且耗时。"
+    ),
+    whatWeDo: ls(
+      "Build style-locked generation pipelines with controlled output parameters, quality filtering, and multi-format export.",
+      "构建风格锁定的生成管线，包含可控输出参数、质量筛选和多格式导出。"
+    ),
+    deliverables: lsa(
+      ["Style reference documents", "Generation scripts", "Quality filter workflows", "Export pipelines"],
+      ["风格参考文档", "生成脚本", "质量筛选工作流", "导出管线"]
+    ),
+  },
+  {
+    id: "dataset-enhancement",
+    title: ls("Dataset enhancement workflow", "数据增强工作流"),
+    problem: ls(
+      "AI teams often lack enough training data, but manual data collection is slow and expensive.",
+      "AI 团队常常缺乏足够的训练数据，但手动数据收集速度慢且成本高。"
+    ),
+    whatWeDo: ls(
+      "Create synthetic data generation pipelines with controlled variation, paired labels, and validation workflows.",
+      "创建合成数据生成管线，包含可控变异、配对标签和验证工作流。"
+    ),
+    deliverables: lsa(
+      ["Synthetic data generator", "Label/mask pairing", "Validation workflows", "Dataset packaging"],
+      ["合成数据生成器", "标签/mask 配对", "验证工作流", "数据集打包"]
+    ),
+  },
+  {
+    id: "education-content",
+    title: ls("Education content workflow", "教育内容生产工作流"),
+    problem: ls(
+      "Educational content needs serialization, consistency, and leveled difficulty, but manual production can't scale.",
+      "教育内容需要系列化、一致性和分级难度，但手动生产无法规模化。"
+    ),
+    whatWeDo: ls(
+      "Build structured pipelines for content generation, illustration, leveling, and multi-platform publishing.",
+      "构建结构化管线，支持内容生成、插图、分级和多平台发布。"
+    ),
+    deliverables: lsa(
+      ["Content generation pipeline", "Illustration workflow", "Leveling engine", "Multi-format export"],
+      ["内容生成管线", "插图工作流", "分级引擎", "多格式导出"]
+    ),
+  },
+  {
+    id: "visual-asset-packaging",
+    title: ls("Visual asset packaging workflow", "视觉资产打包工作流"),
+    problem: ls(
+      "Brands need asset packages for launches, but coordinating design teams and format requirements is complex.",
+      "品牌在发布时需要资产包，但协调设计团队和格式要求很复杂。"
+    ),
+    whatWeDo: ls(
+      "Create end-to-end workflows that generate, review, package, and deliver visual asset collections.",
+      "创建端到端工作流，支持生成、审核、打包和交付视觉资产集合。"
+    ),
+    deliverables: lsa(
+      ["Asset generation scripts", "Review dashboards", "Packaging workflows", "Delivery pipelines"],
+      ["资产生成脚本", "审核看板", "打包工作流", "交付管线"]
+    ),
+  },
+  {
+    id: "internal-demo",
+    title: ls("Internal demo / dashboard workflow", "内部演示与看板工作流"),
+    problem: ls(
+      "Showing AI capabilities to stakeholders requires polished demos, but building them takes engineering resources.",
+      "向利益相关者展示 AI 能力需要精美的演示，但构建演示需要大量工程资源。"
+    ),
+    whatWeDo: ls(
+      "Build lightweight demo pages and dashboards that showcase AI capabilities with real-time interaction.",
+      "构建轻量级演示页面和看板，支持实时交互展示 AI 能力。"
+    ),
+    deliverables: lsa(
+      ["Demo page", "Interactive dashboard", "API integration", "Documentation"],
+      ["演示页面", "交互看板", "API 集成", "文档"]
     ),
   },
 ];

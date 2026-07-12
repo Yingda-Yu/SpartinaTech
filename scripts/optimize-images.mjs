@@ -21,6 +21,7 @@ const MAX_WIDTHS = {
   brand: 1200,
   education: 1200,
   "game-film": 1200,
+  "game-assets": 1600,
 };
 
 function getCategory(dirPath) {

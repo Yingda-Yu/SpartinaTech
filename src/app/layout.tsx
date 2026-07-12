@@ -10,20 +10,20 @@ const inter = Inter({
 });
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://yingda-yu.github.io/SpartinaTech";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://spartina.tech";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Spartina Technology",
-    template: "%s - Spartina Technology",
+    default: "Spartina Technology | AI Services for Data, Vision, and Industry Workflows",
+    template: "%s | Spartina Technology",
   },
   description:
-    "Spartina Technology builds multimodal digital products, AI-generated image and video assets, visual product drops, and custom generation workflows.",
+    "Spartina Technology is an AI service company incubated by Wenzhou-Kean University, building data assets, visual assets, educational content, and industry workflows.",
   openGraph: {
-    title: "Spartina Technology",
+    title: "Spartina Technology | AI Services",
     description:
-      "Multimodal digital product generation for image, video, and AI-native commerce.",
+      "Spartina Technology is an AI service company incubated by Wenzhou-Kean University, building data assets, visual assets, educational content, and industry workflows.",
     url: siteUrl,
     siteName: "Spartina Technology",
     locale: "en_US",
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Spartina Technology",
+    title: "Spartina Technology | AI Services",
     description:
-      "Multimodal digital product generation for image, video, and AI-native commerce.",
+      "Spartina Technology is an AI service company incubated by Wenzhou-Kean University.",
   },
 };
 
