@@ -79,25 +79,59 @@ This mode enables:
 - `assetPrefix: "/SpartinaTech/"`
 - `images.unoptimized: true`
 
-## Vercel
+## Vercel Deployment
 
-Vercel should use the normal Next.js build mode.
+The production site is deployed on Vercel at:
+
+```txt
+https://spartina.tech
+```
+
+### Environment variables
+
+Vercel does **not** need any environment variables by default.
+
+- Do **not** set `GITHUB_PAGES`.
+- Do **not** set `NEXT_PUBLIC_BASE_PATH`.
+
+These are only used for the GitHub Pages backup deployment. When unset, the
+site builds for the root path `/` with no basePath or assetPrefix.
+
+If you want to override the canonical / OpenGraph URL (e.g. for a preview
+deployment), set:
+
+```txt
+NEXT_PUBLIC_SITE_URL=https://spartina.tech
+```
+
+This defaults to `https://spartina.tech` already, so it is optional.
+
+### Build settings
+
+- **Framework Preset:** Next.js (auto-detected)
+- **Build command:** `npm run build`
+- **Install command:** `npm install`
+- **Output directory:** (leave default — Vercel handles this)
+
+### Production branch
+
+- **Production branch:** `main`
+
+Pushing or merging to `main` triggers an automatic production deployment to
+`spartina.tech`.
+
+### Vercel import steps
 
 1. Log in to Vercel.
 2. Choose **Import Git Repository**.
 3. Select `Yingda-Yu/SpartinaTech`.
 4. Keep **Framework Preset** as `Next.js`.
-5. Do not set `GITHUB_PAGES`.
-6. Do not set `NEXT_PUBLIC_BASE_PATH`.
-7. Click **Deploy**.
+5. Do not set `GITHUB_PAGES` or `NEXT_PUBLIC_BASE_PATH`.
+6. Click **Deploy**.
+7. After the first deploy, bind the custom domain `spartina.tech` in
+   **Settings → Domains**.
 
-Vercel should serve the site from the root path:
-
-```txt
-https://your-project.vercel.app/
-```
-
-It should not require `/SpartinaTech` in the URL.
+The site serves from the root path with no `/SpartinaTech` prefix.
 
 ## Future Product Upgrade
 
