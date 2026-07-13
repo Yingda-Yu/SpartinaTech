@@ -89,6 +89,14 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
+                  href="/workplace"
+                  className="text-sm text-[#666666] transition-colors hover:text-[#0a0a0a]"
+                >
+                  {isZh ? "工作方式" : "Workplace"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/case-studies"
                   className="text-sm text-[#666666] transition-colors hover:text-[#0a0a0a]"
                 >
