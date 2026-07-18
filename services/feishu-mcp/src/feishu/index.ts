@@ -88,7 +88,7 @@ export async function sendTextMessage(text: string): Promise<{ message_id: strin
   const token = await getTenantAccessToken();
 
   const response = await fetch(
-    `${config.FEISHU_API_BASE_URL}/open-apis/im/v1/messages`,
+    `${config.FEISHU_API_BASE_URL}/open-apis/im/v1/messages?receive_id_type=chat_id`,
     {
       method: "POST",
       headers: {
@@ -96,7 +96,7 @@ export async function sendTextMessage(text: string): Promise<{ message_id: strin
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        chat_id: config.FEISHU_CHAT_ID,
+        receive_id: config.FEISHU_CHAT_ID,
         msg_type: "text",
         content: JSON.stringify({
           text,
