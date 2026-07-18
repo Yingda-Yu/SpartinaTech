@@ -1,0 +1,239 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { authenticateBearerToken } from "@/auth";
+import { sanitizeConfig, validateConfig } from "@/config";
+import { sendTextMessage, sendImageMessage, sendFileMessage, checkChatAccess, getTenantAccessToken } from "@/feishu";
+import { IdempotencyStore, createIdempotencyStore, IdempotencyRecord } from "@/idempotency";
+
+let idempotencyStore: IdempotencyStore = createIdempotencyStore();
+
+export function setIdempotencyStore(store: IdempotencyStore): void {
+  idempotencyStore = store;
+}
+
+interface JsonRpcRequest {
+  id: string | number;
+  jsonrpc: string;
+  method: string;
+  params?: Record<string, unknown>;
+}
+
+interface JsonRpcResponse {
+  id: string | number | null;
+  jsonrpc: string;
+  result?: unknown;
+  error?: {
+    code: number;
+    message: string;
+  };
+}
+
+function getToolDefinitions() {
+  return [
+    {
+      name: "feishu_send_message",
+      description: "Send a text message to the configured Feishu group",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+      inputSchema: {
+        type: "object",
+        properties: {
+          text: { type: "string", description: "Message text (1-4000 characters)" },
+          title: { type: "string", description: "Optional message title" },
+          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
+        },
+        required: ["text", "idempotency_key"],
+      },
+    },
+    {
+      name: "feishu_send_image",
+      description: "Send an image to the configured Feishu group",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+      inputSchema: {
+        type: "object",
+        properties: {
+          url: { type: "string", description: "Image URL (HTTPS only, max 10MB)" },
+          title: { type: "string", description: "Optional message title" },
+          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
+        },
+        required: ["url", "idempotency_key"],
+      },
+    },
+    {
+      name: "feishu_send_file",
+      description: "Send a file (ZIP, PDF, DOCX, etc.) to the configured Feishu group",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+      inputSchema: {
+        type: "object",
+        properties: {
+          url: { type: "string", description: "File URL (HTTPS only, max 10MB)" },
+          title: { type: "string", description: "Optional message title" },
+          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
+        },
+        required: ["url", "idempotency_key"],
+      },
+    },
+  ];
+}
+
+async function processToolCall(toolName: string, toolArguments: Record<string, unknown>) {
+  const chatId = process.env.FEISHU_CHAT_ID?.trim() || "";
+  const idempotencyKey = toolArguments.idempotency_key as string;
+  const title = toolArguments.title as string | undefined;
+  const fullKey = `feishu-mcp:${toolName}:${chatId}:${idempotencyKey}`;
+
+  const cachedResult = await idempotencyStore.get(fullKey);
+  if (cachedResult) {
+    const cachedRecord = cachedResult as IdempotencyRecord;
+    if (cachedRecord.status === 'sent' && cachedRecord.result) {
+      const cached = cachedRecord.result as { delivered: boolean; message_id: string; chat_id: string; timestamp: number };
+      return {
+        content: [{ type: "text", text: `Message already sent: ${cached.message_id}` }],
+        structuredContent: {
+          delivered: true,
+          duplicate: true,
+          message_id: cached.message_id,
+          chat_id: cached.chat_id,
+          timestamp: cached.timestamp,
+          idempotency_key: idempotencyKey,
+        },
+      };
+    } else if (cachedRecord.status === 'processing') {
+      throw new Error("Message is currently being processed");
+    } else if (cachedRecord.status === 'failed') {
+      throw new Error(cachedRecord.error || "Previous attempt failed");
+    }
+  }
+
+  const acquired = await (idempotencyStore as any).setProcessing?.(fullKey);
+  if (acquired === false) {
+    throw new Error("Message is currently being processed");
+  }
+
+  try {
+    let sendResult: { message_id: string; chat_id: string };
+
+    switch (toolName) {
+      case "feishu_send_message": {
+        const text = toolArguments.text as string;
+        if (!text) {
+          throw new Error("Missing required argument: text");
+        }
+        const fullText = title ? `【${title}】\n${text}` : text;
+        sendResult = await sendTextMessage(fullText);
+        break;
+      }
+      case "feishu_send_image": {
+        const url = toolArguments.url as string;
+        if (!url) {
+          throw new Error("Missing required argument: url");
+        }
+        sendResult = await sendImageMessage(url, title);
+        break;
+      }
+      case "feishu_send_file": {
+        const url = toolArguments.url as string;
+        if (!url) {
+          throw new Error("Missing required argument: url");
+        }
+        sendResult = await sendFileMessage(url, title);
+        break;
+      }
+      default:
+        throw new Error(`Unknown tool: ${toolName}`);
+    }
+
+    const responseResult = {
+      delivered: true,
+      duplicate: false,
+      message_id: sendResult.message_id,
+      chat_id: sendResult.chat_id,
+      timestamp: Date.now(),
+      idempotency_key: idempotencyKey,
+    };
+
+    await idempotencyStore.set(fullKey, responseResult);
+
+    return {
+      content: [{ type: "text", text: `Message sent successfully: ${sendResult.message_id}` }],
+      structuredContent: responseResult,
+    };
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    await (idempotencyStore as any).setFailed?.(fullKey, errorMessage);
+    throw e;
+  }
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<JsonRpcResponse | { ok: boolean; errors?: string[] }>) {
+  const authorization = req.headers.authorization || null;
+
+  if (!authenticateBearerToken(authorization)) {
+    return res.status(401).json({ id: null, jsonrpc: "2.0", error: { code: -32601, message: "Unauthorized" } });
+  }
+
+  const { id, jsonrpc, method, params } = req.body as JsonRpcRequest;
+
+  if (!id || !jsonrpc || !method) {
+    return res.status(400).json({ id, jsonrpc, error: { code: -32600, message: "Invalid request" } });
+  }
+
+  try {
+    let result: unknown;
+
+    switch (method) {
+      case "initialize":
+        result = {
+          name: "Spartina Feishu MCP",
+          version: "0.1.0",
+          description: "MCP server for Feishu message sending",
+          tools: getToolDefinitions(),
+        };
+        break;
+
+      case "tools/list":
+        result = {
+          tools: getToolDefinitions(),
+        };
+        break;
+
+      case "tools/call": {
+        const toolName = params?.name as string;
+        const toolArguments = params?.arguments as Record<string, unknown>;
+
+        if (!toolName || !toolArguments) {
+          throw new Error("Missing tool name or arguments");
+        }
+
+        result = await processToolCall(toolName, toolArguments);
+        break;
+      }
+
+      case "notifications/initialized":
+        result = {};
+        break;
+
+      default:
+        throw new Error(`Method not found: ${method}`);
+    }
+
+    return res.status(200).json({ id, jsonrpc, result });
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ id, jsonrpc, error: { code: -32000, message } });
+  }
+}

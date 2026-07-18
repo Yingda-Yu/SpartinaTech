@@ -12,7 +12,7 @@ async function runSmokeTests() {
   console.log("1. Configuration Validation (without env vars)");
   const configResult = validateConfig();
   console.log(`   - Has all vars: ${configResult.ok}`);
-  console.log(`   - Missing: ${configResult.missing.length}`);
+  console.log(`   - Errors: ${configResult.errors.length}`);
   console.log("   ✅ Config validation logic works");
 
   console.log("\n2. Bearer Token Authentication Logic");

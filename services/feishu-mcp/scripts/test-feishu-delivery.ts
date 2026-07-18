@@ -12,7 +12,7 @@ async function runFullTests() {
   console.log("1. Environment Configuration");
   const configResult = validateConfig();
   if (!configResult.ok) {
-    console.log(`   ❌ Missing environment variables: ${configResult.missing}`);
+    console.log(`   ❌ Invalid configuration: ${configResult.errors.join('; ')}`);
     process.exit(1);
   }
   console.log("   ✅ All environment variables present");

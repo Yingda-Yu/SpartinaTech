@@ -2,19 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "devCommand": "vercel dev",
-  "framework": "next",
-  "functions": {
-    "api/*.ts": {
-      "runtime": "@vercel/node@3.2.12",
-      "memory": 256
-    }
-  },
+  "framework": "nextjs",
   "installCommand": "npm install",
-  "outputDirectory": ".vercel/output",
-  "regions": ["hkg1"],
-  "rewrites": [
-    { "source": "/healthz", "destination": "/api/healthz" },
-    { "source": "/readyz", "destination": "/api/readyz" },
-    { "source": "/mcp", "destination": "/api/mcp" }
-  ]
+  "regions": ["hkg1"]
 }
