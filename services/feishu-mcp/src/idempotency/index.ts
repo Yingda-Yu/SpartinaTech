@@ -1,38 +1,49 @@
-interface IdempotencyRecord {
-  idempotency_key: string;
-  result: unknown;
-  timestamp: number;
+export interface IdempotencyStore {
+  get(idempotencyKey: string): Promise<unknown | null>;
+  set(idempotencyKey: string, result: unknown): Promise<void>;
+  delete(idempotencyKey: string): Promise<void>;
+  cleanup(): Promise<void>;
 }
 
-const idempotencyStore: Map<string, IdempotencyRecord> = new Map();
+export class MemoryIdempotencyStore implements IdempotencyStore {
+  private readonly store = new Map<string, { result: unknown; timestamp: number }>();
+  private readonly maxCacheAgeMs = 24 * 60 * 60 * 1000;
 
-const MAX_CACHE_AGE_MS = 24 * 60 * 60 * 1000;
+  async get(idempotencyKey: string): Promise<unknown | null> {
+    const record = this.store.get(idempotencyKey);
+    if (!record) return null;
 
-export function getCachedResult(idempotencyKey: string): unknown | null {
-  const record = idempotencyStore.get(idempotencyKey);
-  if (!record) return null;
+    if (Date.now() - record.timestamp > this.maxCacheAgeMs) {
+      this.store.delete(idempotencyKey);
+      return null;
+    }
 
-  if (Date.now() - record.timestamp > MAX_CACHE_AGE_MS) {
-    idempotencyStore.delete(idempotencyKey);
-    return null;
+    return record.result;
   }
 
-  return record.result;
-}
+  async set(idempotencyKey: string, result: unknown): Promise<void> {
+    this.store.set(idempotencyKey, {
+      result,
+      timestamp: Date.now(),
+    });
+  }
 
-export function cacheResult(idempotencyKey: string, result: unknown): void {
-  idempotencyStore.set(idempotencyKey, {
-    idempotency_key: idempotencyKey,
-    result,
-    timestamp: Date.now(),
-  });
-}
+  async delete(idempotencyKey: string): Promise<void> {
+    this.store.delete(idempotencyKey);
+  }
 
-export function cleanupOldRecords(): void {
-  const now = Date.now();
-  for (const [key, record] of idempotencyStore.entries()) {
-    if (now - record.timestamp > MAX_CACHE_AGE_MS) {
-      idempotencyStore.delete(key);
+  async cleanup(): Promise<void> {
+    const now = Date.now();
+    for (const [key, record] of this.store.entries()) {
+      if (now - record.timestamp > this.maxCacheAgeMs) {
+        this.store.delete(key);
+      }
     }
   }
+
+  get size(): number {
+    return this.store.size;
+  }
 }
+
+export { MemoryIdempotencyStore as __DEV_ONLY_MemoryIdempotencyStore };

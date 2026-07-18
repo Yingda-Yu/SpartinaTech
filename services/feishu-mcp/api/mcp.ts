@@ -1,66 +1,38 @@
-import { NextRequest } from "next/server";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 import { authenticateBearerToken } from "@/auth";
-import { handleMCPRequest } from "@/mcp";
+import { mcpServer, mcpTransport } from "@/mcp";
 
-export const config = {
-  runtime: "edge",
-};
+let transportConnected = false;
 
-export async function POST(request: NextRequest) {
-  const authorization = request.headers.get("Authorization");
-  if (!authenticateBearerToken(authorization)) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-
-  try {
-    const body = await request.json();
-    const response = await handleMCPRequest(body);
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    return new Response(
-      JSON.stringify({
-        jsonrpc: "2.0",
-        error: {
-          code: -32000,
-          message: error instanceof Error ? error.message : "Internal error",
-        },
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+async function ensureTransportConnected(): Promise<void> {
+  if (!transportConnected) {
+    await mcpServer.connect(mcpTransport);
+    transportConnected = true;
   }
 }
 
-export async function GET(request: NextRequest) {
-  const authorization = request.headers.get("Authorization");
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const authorization = req.headers.authorization ?? null;
   if (!authenticateBearerToken(authorization)) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: {
-        "Content-Type": "application/json",
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  await ensureTransportConnected();
+
+  try {
+    await mcpTransport.handleRequest(
+      req as any,
+      res as any,
+      req.body
+    );
+  } catch (error) {
+    console.error("MCP request error:", error);
+    res.status(500).json({
+      jsonrpc: "2.0",
+      error: {
+        code: -32000,
+        message: error instanceof Error ? error.message : "Internal error",
       },
     });
   }
-
-  const response = await handleMCPRequest({ jsonrpc: "2.0", method: "tools/list" });
-  return new Response(JSON.stringify(response), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 }

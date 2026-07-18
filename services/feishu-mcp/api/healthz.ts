@@ -1,14 +1,5 @@
-import { NextRequest } from "next/server";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
-export const config = {
-  runtime: "edge",
-};
-
-export async function GET(request: NextRequest) {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export default function handler(_req: VercelRequest, res: VercelResponse) {
+  res.status(200).json({ ok: true });
 }

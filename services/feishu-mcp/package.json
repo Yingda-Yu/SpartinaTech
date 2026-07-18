@@ -9,9 +9,14 @@
     "deploy": "vercel",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --test"
+    "test": "node --test",
+    "smoke-test": "tsx scripts/smoke-test.ts",
+    "test:feishu": "tsx scripts/test-feishu-delivery.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/node": "^2.0.0-beta.4",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^16.4.5",
     "undici": "^6.19.0",
     "zod": "^3.23.8"
   },

@@ -1,48 +1,23 @@
-import { NextRequest } from "next/server";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 import { validateConfig } from "@/config";
 import { healthCheck } from "@/feishu";
 
-export const config = {
-  runtime: "edge",
-};
-
-export async function GET(request: NextRequest) {
+export default async function handler(_req: VercelRequest, res: VercelResponse) {
   const configResult = validateConfig();
   if (!configResult.ok) {
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        errors: configResult.missing.map((key) => `${key} is missing`),
-      }),
-      {
-        status: 503,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    return res.status(503).json({
+      ok: false,
+      errors: configResult.missing.map((key) => `${key} is missing`),
+    });
   }
 
   const feishuResult = await healthCheck();
   if (!feishuResult.ok) {
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        errors: feishuResult.errors,
-      }),
-      {
-        status: 503,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    return res.status(503).json({
+      ok: false,
+      errors: feishuResult.errors,
+    });
   }
 
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  res.status(200).json({ ok: true });
 }

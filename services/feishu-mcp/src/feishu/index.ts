@@ -117,9 +117,10 @@ export async function sendTextMessage(text: string): Promise<{ message_id: strin
   };
 }
 
-export async function checkChatAccess(): Promise<boolean> {
+export async function checkChatAccess(): Promise<{ ok: boolean; chat_id?: string; errors: string[] }> {
   const config = getConfig();
   const token = await getTenantAccessToken();
+  const errors: string[] = [];
 
   try {
     const response = await fetch(
@@ -133,9 +134,15 @@ export async function checkChatAccess(): Promise<boolean> {
     );
 
     const data: ChatInfoResponse = await response.json();
-    return data.code === 0;
-  } catch {
-    return false;
+    if (data.code === 0) {
+      return { ok: true, chat_id: data.data.chat_id, errors };
+    } else {
+      errors.push(`Chat access denied: ${data.msg}`);
+      return { ok: false, errors };
+    }
+  } catch (e) {
+    errors.push(`Chat access check failed: ${e}`);
+    return { ok: false, errors };
   }
 }
 
@@ -150,7 +157,7 @@ export async function healthCheck(): Promise<{ ok: boolean; errors: string[] }> 
 
   try {
     const chatAccessible = await checkChatAccess();
-    if (!chatAccessible) {
+    if (!chatAccessible.ok) {
       errors.push("Cannot access target chat");
     }
   } catch (e) {
