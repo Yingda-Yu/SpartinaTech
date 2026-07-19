@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { authenticateBearerToken } from "@/auth";
-import { sanitizeConfig, validateConfig } from "@/config";
-import { sendTextMessage, sendImageMessage, sendFileMessage, checkChatAccess, getTenantAccessToken } from "@/feishu";
-import { IdempotencyStore, createIdempotencyStore, IdempotencyRecord, isProduction, getRedisConfig } from "@/idempotency";
+import { sendTextMessage, sendImageMessage, sendFileMessage } from "@/feishu";
+import { IdempotencyStore, createIdempotencyStore, isProduction, getRedisConfig } from "@/idempotency";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp";
+import * as z from "zod";
 
 let idempotencyStore: IdempotencyStore | null = null;
 let redisInitialized = false;
@@ -41,85 +43,6 @@ function checkRedisForProduction(): void {
   }
 }
 
-interface JsonRpcRequest {
-  id: string | number;
-  jsonrpc: string;
-  method: string;
-  params?: Record<string, unknown>;
-}
-
-interface JsonRpcResponse {
-  id: string | number | null;
-  jsonrpc: string;
-  result?: unknown;
-  error?: {
-    code: number;
-    message: string;
-  };
-}
-
-function getToolDefinitions() {
-  return [
-    {
-      name: "feishu_send_message",
-      description: "Send a text message to the configured Feishu group",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-        openWorldHint: true,
-      },
-      inputSchema: {
-        type: "object",
-        properties: {
-          text: { type: "string", description: "Message text (1-4000 characters)" },
-          title: { type: "string", description: "Optional message title" },
-          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
-        },
-        required: ["text", "idempotency_key"],
-      },
-    },
-    {
-      name: "feishu_send_image",
-      description: "Send an image to the configured Feishu group",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-        openWorldHint: true,
-      },
-      inputSchema: {
-        type: "object",
-        properties: {
-          url: { type: "string", description: "Image URL (HTTPS only, max 10MB)" },
-          title: { type: "string", description: "Optional message title" },
-          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
-        },
-        required: ["url", "idempotency_key"],
-      },
-    },
-    {
-      name: "feishu_send_file",
-      description: "Send a file (ZIP, PDF, DOCX, etc.) to the configured Feishu group",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: true,
-        openWorldHint: true,
-      },
-      inputSchema: {
-        type: "object",
-        properties: {
-          url: { type: "string", description: "File URL (HTTPS only, max 10MB)" },
-          title: { type: "string", description: "Optional message title" },
-          idempotency_key: { type: "string", description: "Idempotency key to prevent duplicate messages" },
-        },
-        required: ["url", "idempotency_key"],
-      },
-    },
-  ];
-}
-
 async function processToolCall(toolName: string, toolArguments: Record<string, unknown>) {
   const chatId = process.env.FEISHU_CHAT_ID?.trim() || "";
   const idempotencyKey = toolArguments.idempotency_key as string;
@@ -137,7 +60,7 @@ async function processToolCall(toolName: string, toolArguments: Record<string, u
       return null;
     }
 
-    const record = cached as IdempotencyRecord;
+    const record = cached as any;
 
     if (record.status === 'sent' && record.result) {
       console.log(`[MCP] getCachedResult: found sent record`);
@@ -150,7 +73,7 @@ async function processToolCall(toolName: string, toolArguments: Record<string, u
         await new Promise(resolve => setTimeout(resolve, 300));
         const updated = await store.get(fullKey);
         if (!updated) return null;
-        const updatedRecord = updated as IdempotencyRecord;
+        const updatedRecord = updated as any;
         if (updatedRecord.status === 'sent' && updatedRecord.result) {
           console.log(`[MCP] getCachedResult: found sent record after waiting`);
           return updatedRecord.result;
@@ -173,7 +96,7 @@ async function processToolCall(toolName: string, toolArguments: Record<string, u
     console.log(`[MCP] returning cached result`);
     const cached = cachedResult as { delivered: boolean; message_id: string; chat_id: string; timestamp: number; [key: string]: unknown };
     return {
-      content: [{ type: "text", text: `Message already sent: ${cached.message_id}` }],
+      content: [{ type: "text" as const, text: `Message already sent: ${cached.message_id}` }],
       structuredContent: {
         delivered: true,
         duplicate: true,
@@ -193,24 +116,24 @@ async function processToolCall(toolName: string, toolArguments: Record<string, u
     for (let i = 0; i < 15; i++) {
       await new Promise(resolve => setTimeout(resolve, 300));
       const waitingResult = await getCachedResult();
-      if (waitingResult) {
-        console.log(`[MCP] found cached result while waiting`);
-        const cached = waitingResult as { delivered: boolean; message_id: string; chat_id: string; timestamp: number; [key: string]: unknown };
-        return {
-          content: [{ type: "text", text: `Message already sent: ${cached.message_id}` }],
-          structuredContent: {
-            delivered: true,
-            duplicate: true,
-            message_id: cached.message_id,
-            chat_id: cached.chat_id,
-            timestamp: cached.timestamp,
-            idempotency_key: idempotencyKey,
-            ...extractExtraFields(cached),
-          },
-        };
-      }
+        if (waitingResult) {
+          console.log(`[MCP] found cached result while waiting`);
+          const cached = waitingResult as { delivered: boolean; message_id: string; chat_id: string; timestamp: number; [key: string]: unknown };
+          return {
+            content: [{ type: "text" as const, text: `Message already sent: ${cached.message_id}` }],
+            structuredContent: {
+              delivered: true,
+              duplicate: true,
+              message_id: cached.message_id,
+              chat_id: cached.chat_id,
+              timestamp: cached.timestamp,
+              idempotency_key: idempotencyKey,
+              ...extractExtraFields(cached),
+            },
+          };
+        }
       const cached = await store.get(fullKey);
-      const record = cached as IdempotencyRecord;
+      const record = cached as any;
       if (record?.status === 'failed') {
         throw new Error(record.error || "Message sending failed");
       }
@@ -267,7 +190,7 @@ async function processToolCall(toolName: string, toolArguments: Record<string, u
     console.log(`[MCP] store.set completed`);
 
     return {
-      content: [{ type: "text", text: `Message sent successfully: ${sendResult.message_id}` }],
+      content: [{ type: "text" as const, text: `Message sent successfully: ${sendResult.message_id}` }],
       structuredContent: responseResult,
     };
   } catch (e) {
@@ -283,64 +206,110 @@ function extractExtraFields(result: { [key: string]: unknown }): Record<string, 
   return rest;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<JsonRpcResponse | { ok: boolean; errors?: string[] }>) {
+function createMcpServer(): McpServer {
+  const server = new McpServer({
+    name: "Spartina Feishu MCP",
+    version: "0.1.0",
+    description: "MCP server for Feishu message sending",
+  }, {
+    capabilities: {
+      logging: {},
+    },
+  });
+
+  server.registerTool("feishu_send_message", {
+    description: "Send a text message to the configured Feishu group",
+    inputSchema: z.object({
+      text: z.string().describe("Message text (1-4000 characters)"),
+      title: z.string().describe("Optional message title").optional(),
+      idempotency_key: z.string().describe("Idempotency key to prevent duplicate messages"),
+    }),
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+  }, async ({ text, title, idempotency_key }) => {
+    checkRedisForProduction();
+    return processToolCall("feishu_send_message", { text, title, idempotency_key });
+  });
+
+  server.registerTool("feishu_send_image", {
+    description: "Send an image to the configured Feishu group",
+    inputSchema: z.object({
+      url: z.string().describe("Image URL (HTTPS only, max 10MB)"),
+      title: z.string().describe("Optional message title").optional(),
+      idempotency_key: z.string().describe("Idempotency key to prevent duplicate messages"),
+    }),
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+  }, async ({ url, title, idempotency_key }) => {
+    checkRedisForProduction();
+    return processToolCall("feishu_send_image", { url, title, idempotency_key });
+  });
+
+  server.registerTool("feishu_send_file", {
+    description: "Send a file (ZIP, PDF, DOCX, etc.) to the configured Feishu group",
+    inputSchema: z.object({
+      url: z.string().describe("File URL (HTTPS only, max 10MB)"),
+      title: z.string().describe("Optional message title").optional(),
+      idempotency_key: z.string().describe("Idempotency key to prevent duplicate messages"),
+    }),
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+  }, async ({ url, title, idempotency_key }) => {
+    checkRedisForProduction();
+    return processToolCall("feishu_send_file", { url, title, idempotency_key });
+  });
+
+  return server;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const authorization = req.headers.authorization || null;
 
   if (!authenticateBearerToken(authorization)) {
     return res.status(401).json({ id: null, jsonrpc: "2.0", error: { code: -32601, message: "Unauthorized" } });
   }
 
-  const { id, jsonrpc, method, params } = req.body as JsonRpcRequest;
-
-  if (!id || !jsonrpc || !method) {
-    return res.status(400).json({ id, jsonrpc, error: { code: -32600, message: "Invalid request" } });
-  }
-
   try {
-    let result: unknown;
+    const server = createMcpServer();
 
-    switch (method) {
-      case "initialize":
-        result = {
-          name: "Spartina Feishu MCP",
-          version: "0.1.0",
-          description: "MCP server for Feishu message sending",
-          tools: getToolDefinitions(),
-        };
-        break;
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    });
 
-      case "tools/list":
-        result = {
-          tools: getToolDefinitions(),
-        };
-        break;
+    await server.connect(transport);
 
-      case "tools/call": {
-        const toolName = params?.name as string;
-        const toolArguments = params?.arguments as Record<string, unknown>;
+    await transport.handleRequest(req, res, req.body);
 
-        if (!toolName || !toolArguments) {
-          throw new Error("Missing tool name or arguments");
-        }
-
-        checkRedisForProduction();
-
-        result = await processToolCall(toolName, toolArguments);
-        break;
-      }
-
-      case "notifications/initialized":
-        result = {};
-        break;
-
-      default:
-        throw new Error(`Method not found: ${method}`);
-    }
-
-    return res.status(200).json({ id, jsonrpc, result });
+    res.on("close", () => {
+      transport.close();
+      server.close();
+    });
 
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return res.status(500).json({ id, jsonrpc, error: { code: -32000, message } });
+    console.error("[MCP] Error handling request:", error);
+    if (!res.headersSent) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(500).json({
+        jsonrpc: "2.0",
+        error: {
+          code: -32603,
+          message: "Internal server error",
+        },
+        id: null,
+      });
+    }
   }
 }
