@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { validateConfig } from "@/config";
 import { getTenantAccessToken, checkChatAccess } from "@/feishu";
-import { createIdempotencyStore, RedisIdempotencyStore } from "@/idempotency";
+import { createIdempotencyStore, RedisIdempotencyStore, isProduction, getRedisConfig } from "@/idempotency";
 
 interface CheckResult {
   name: string;
@@ -46,16 +46,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     checks.push({ name: "chat_access", ok: false, error: "Failed to check chat access" });
   }
 
-  const idempotencyStore = createIdempotencyStore();
-  const isRedis = idempotencyStore instanceof RedisIdempotencyStore;
-  
-  checks.push({
-    name: "idempotency_store",
-    ok: idempotencyStore.isReady(),
-    error: isRedis ? (idempotencyStore.isReady() ? undefined : "Redis connection failed") : "Using MemoryIdempotencyStore (development only)",
-  });
+  try {
+    const idempotencyStore = createIdempotencyStore();
+    const isRedis = idempotencyStore instanceof RedisIdempotencyStore;
+
+    checks.push({
+      name: "idempotency_store",
+      ok: idempotencyStore.isReady(),
+      error: isRedis
+        ? (idempotencyStore.isReady() ? undefined : "Redis connection failed")
+        : "Using MemoryIdempotencyStore (local development only)",
+    });
+  } catch (e) {
+    const redisConfig = getRedisConfig();
+    const hasUrl = !!redisConfig.url;
+    const hasToken = !!redisConfig.token;
+
+    checks.push({
+      name: "idempotency_store",
+      ok: false,
+      error: isProduction()
+        ? `Redis configuration missing: url=${hasUrl ? 'present' : 'missing'}, token=${hasToken ? 'present' : 'missing'}`
+        : `Redis configuration missing (degraded mode): url=${hasUrl ? 'present' : 'missing'}, token=${hasToken ? 'present' : 'missing'}`,
+    });
+  }
 
   const allOk = checks.every((c) => c.ok);
+  const statusCode = isProduction() && !allOk ? 503 : (allOk ? 200 : 200);
 
-  return res.status(allOk ? 200 : 503).json({ ok: allOk, checks });
+  return res.status(statusCode).json({ ok: allOk, checks });
 }

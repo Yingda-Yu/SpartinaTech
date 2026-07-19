@@ -2,12 +2,34 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { sendTextMessage, sendImageMessage, sendFileMessage } from "@/feishu";
-import { IdempotencyStore, createIdempotencyStore, IdempotencyRecord } from "@/idempotency";
+import { IdempotencyStore, createIdempotencyStore, IdempotencyRecord, isProduction, getRedisConfig } from "@/idempotency";
 
-let idempotencyStore: IdempotencyStore = createIdempotencyStore();
+let idempotencyStore: IdempotencyStore | null = null;
+let redisInitialized = false;
+
+function getOrCreateIdempotencyStore(): IdempotencyStore {
+  if (!redisInitialized) {
+    try {
+      idempotencyStore = createIdempotencyStore();
+    } catch (e) {
+      if (isProduction()) {
+        throw e;
+      }
+      idempotencyStore = null;
+    }
+    redisInitialized = true;
+  }
+
+  if (!idempotencyStore) {
+    throw new Error("Idempotency store not available");
+  }
+
+  return idempotencyStore;
+}
 
 export function setIdempotencyStore(store: IdempotencyStore): void {
   idempotencyStore = store;
+  redisInitialized = true;
 }
 
 export const mcpServer = new McpServer(
@@ -24,42 +46,76 @@ async function handleToolCall(
   toolName: string,
   idempotencyKey: string,
   title: string | undefined,
-  sendFn: () => Promise<{ message_id: string; chat_id: string }>
+  sendFn: () => Promise<{ message_id: string; chat_id: string; [key: string]: unknown }>
 ) {
   const chatId = process.env.FEISHU_CHAT_ID?.trim() || "";
   const fullKey = `feishu-mcp:${toolName}:${chatId}:${idempotencyKey}`;
 
-  const cachedResult = await idempotencyStore.get(fullKey);
-  if (cachedResult) {
-    const cachedRecord = cachedResult as IdempotencyRecord;
-    if (cachedRecord.status === 'sent' && cachedRecord.result) {
-      const result = cachedRecord.result as {
-        delivered: boolean;
-        message_id: string;
-        chat_id: string;
-        timestamp: number;
-        idempotency_key: string;
-      };
-      return {
-        content: [{ type: "text" as const, text: `Message already sent: ${result.message_id}` }],
-        structuredContent: {
-          delivered: true,
-          duplicate: true,
-          message_id: result.message_id,
-          chat_id: result.chat_id,
-          timestamp: result.timestamp,
-          idempotency_key: idempotencyKey,
-        },
-      };
-    } else if (cachedRecord.status === 'processing') {
-      throw new Error("Message is currently being processed");
-    } else if (cachedRecord.status === 'failed') {
-      throw new Error(cachedRecord.error || "Previous attempt failed");
+  const store = getOrCreateIdempotencyStore();
+
+  const getCachedResult = async (): Promise<unknown | null> => {
+    const cached = await store.get(fullKey);
+    if (!cached) return null;
+
+    const record = cached as IdempotencyRecord;
+    if (record.status === 'sent' && record.result) {
+      return record.result;
     }
+    return null;
+  };
+
+  const cachedResult = await getCachedResult();
+  if (cachedResult) {
+    const result = cachedResult as {
+      delivered: boolean;
+      message_id: string;
+      chat_id: string;
+      timestamp: number;
+      idempotency_key: string;
+      [key: string]: unknown;
+    };
+    return {
+      content: [{ type: "text" as const, text: `Message already sent: ${result.message_id}` }],
+      structuredContent: {
+        delivered: true,
+        duplicate: true,
+        message_id: result.message_id,
+        chat_id: result.chat_id,
+        timestamp: result.timestamp,
+        idempotency_key: idempotencyKey,
+        ...extractExtraFields(result),
+      },
+    };
   }
 
-  const acquired = await (idempotencyStore as any).setProcessing?.(fullKey);
+  const acquired = await (store as any).setProcessing?.(fullKey);
   if (acquired === false) {
+    for (let i = 0; i < 10; i++) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const waitingResult = await getCachedResult();
+      if (waitingResult) {
+        const result = waitingResult as {
+          delivered: boolean;
+          message_id: string;
+          chat_id: string;
+          timestamp: number;
+          idempotency_key: string;
+          [key: string]: unknown;
+        };
+        return {
+          content: [{ type: "text" as const, text: `Message already sent: ${result.message_id}` }],
+          structuredContent: {
+            delivered: true,
+            duplicate: true,
+            message_id: result.message_id,
+            chat_id: result.chat_id,
+            timestamp: result.timestamp,
+            idempotency_key: idempotencyKey,
+            ...extractExtraFields(result),
+          },
+        };
+      }
+    }
     throw new Error("Message is currently being processed");
   }
 
@@ -73,9 +129,10 @@ async function handleToolCall(
       chat_id: result.chat_id,
       timestamp: Date.now(),
       idempotency_key: idempotencyKey,
+      ...extractExtraFields(result),
     };
 
-    await idempotencyStore.set(fullKey, responseResult);
+    await store.set(fullKey, responseResult);
 
     return {
       content: [{ type: "text" as const, text: `Message sent successfully: ${result.message_id}` }],
@@ -83,9 +140,14 @@ async function handleToolCall(
     };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e);
-    await (idempotencyStore as any).setFailed?.(fullKey, errorMessage);
+    await (store as any).setFailed?.(fullKey, errorMessage);
     throw e;
   }
+}
+
+function extractExtraFields(result: { [key: string]: unknown }): Record<string, unknown> {
+  const { delivered, duplicate, message_id, chat_id, timestamp, idempotency_key, ...rest } = result as any;
+  return rest;
 }
 
 mcpServer.registerTool(

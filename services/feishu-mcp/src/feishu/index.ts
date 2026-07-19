@@ -29,7 +29,8 @@ interface UploadResponse {
   code: number;
   msg: string;
   data: {
-    file_token: string;
+    image_key?: string;
+    file_key?: string;
   };
 }
 
@@ -91,8 +92,21 @@ function validateUrl(url: string): boolean {
 }
 
 function validateExtension(filename: string): boolean {
-  const ext = filename.toLowerCase().substring(filename.lastIndexOf("."));
+  const cleanFilename = filename.split("?")[0];
+  const ext = cleanFilename.toLowerCase().substring(cleanFilename.lastIndexOf("."));
+  if (!ext || ext === cleanFilename) {
+    return true;
+  }
   return ALLOWED_EXTENSIONS.includes(ext);
+}
+
+function getFilenameFromUrl(url: string): string {
+  const cleanUrl = url.split("?")[0];
+  const filename = cleanUrl.substring(cleanUrl.lastIndexOf("/") + 1) || "file";
+  if (filename.includes(".")) {
+    return filename;
+  }
+  return filename + ".dat";
 }
 
 export async function getTenantAccessToken(): Promise<string> {
@@ -199,10 +213,18 @@ export async function uploadImage(url: string): Promise<string> {
   }
 
   const contentType = response.headers.get("content-type") || "image/png";
-  const filename = url.substring(url.lastIndexOf("/") + 1) || "image.png";
+  let filename = getFilenameFromUrl(url);
 
-  if (!validateExtension(filename)) {
-    throw new Error("File extension not allowed");
+  if (!filename.includes(".")) {
+    const extMap: Record<string, string> = {
+      "image/jpeg": ".jpg",
+      "image/png": ".png",
+      "image/gif": ".gif",
+      "image/webp": ".webp",
+      "image/bmp": ".bmp",
+    };
+    const ext = extMap[contentType] || ".png";
+    filename += ext;
   }
 
   const config = sanitizeConfig();
@@ -229,7 +251,7 @@ export async function uploadImage(url: string): Promise<string> {
     throw new Error(`Feishu upload error [${data.code}]: ${data.msg}`);
   }
 
-  return data.data.file_token;
+  return data.data.image_key || data.data.file_key || "";
 }
 
 export async function uploadFile(url: string): Promise<string> {
@@ -248,17 +270,27 @@ export async function uploadFile(url: string): Promise<string> {
   }
 
   const contentType = response.headers.get("content-type") || "application/octet-stream";
-  const filename = url.substring(url.lastIndexOf("/") + 1) || "file.dat";
+  let filename = getFilenameFromUrl(url);
 
-  if (!validateExtension(filename)) {
-    throw new Error("File extension not allowed");
+  if (!filename.includes(".")) {
+    const extMap: Record<string, string> = {
+      "application/pdf": ".pdf",
+      "application/zip": ".zip",
+      "application/x-zip-compressed": ".zip",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+    };
+    const ext = extMap[contentType] || ".dat";
+    filename += ext;
   }
 
   const config = sanitizeConfig();
   const token = await getTenantAccessToken();
 
   const formData = new FormData();
-  formData.append("file_type", "message");
+  formData.append("file_type", "stream");
+  formData.append("file_name", filename);
   formData.append("file", new Blob([arrayBuffer], { type: contentType }), filename);
 
   const uploadResponse = await fetch(
@@ -278,10 +310,15 @@ export async function uploadFile(url: string): Promise<string> {
     throw new Error(`Feishu upload error [${data.code}]: ${data.msg}`);
   }
 
-  return data.data.file_token;
+  const key = data.data.image_key || data.data.file_key;
+  if (!key) {
+    throw new Error("Feishu upload response missing file key");
+  }
+
+  return key;
 }
 
-export async function sendImageMessage(imageUrl: string, title?: string): Promise<{ message_id: string; chat_id: string }> {
+export async function sendImageMessage(imageUrl: string, title?: string): Promise<{ message_id: string; chat_id: string; image_key: string }> {
   const fileToken = await uploadImage(imageUrl);
   const config = sanitizeConfig();
   const token = await getTenantAccessToken();
@@ -313,10 +350,11 @@ export async function sendImageMessage(imageUrl: string, title?: string): Promis
   return {
     message_id: data.data.message_id,
     chat_id: config.FEISHU_CHAT_ID,
+    image_key: fileToken,
   };
 }
 
-export async function sendFileMessage(fileUrl: string, title?: string): Promise<{ message_id: string; chat_id: string }> {
+export async function sendFileMessage(fileUrl: string, title?: string): Promise<{ message_id: string; chat_id: string; file_key: string }> {
   const fileToken = await uploadFile(fileUrl);
   const config = sanitizeConfig();
   const token = await getTenantAccessToken();
@@ -348,6 +386,7 @@ export async function sendFileMessage(fileUrl: string, title?: string): Promise<
   return {
     message_id: data.data.message_id,
     chat_id: config.FEISHU_CHAT_ID,
+    file_key: fileToken,
   };
 }
 

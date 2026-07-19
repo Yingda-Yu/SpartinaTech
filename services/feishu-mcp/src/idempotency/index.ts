@@ -4,6 +4,7 @@ export interface IdempotencyStore {
   delete(idempotencyKey: string): Promise<void>;
   cleanup(): Promise<void>;
   isReady(): boolean;
+  getStoreType(): 'memory' | 'redis';
 }
 
 export type IdempotencyStatus = 'processing' | 'sent' | 'failed';
@@ -23,6 +24,10 @@ export class MemoryIdempotencyStore implements IdempotencyStore {
     return true;
   }
 
+  getStoreType(): 'memory' | 'redis' {
+    return 'memory';
+  }
+
   async get(idempotencyKey: string): Promise<unknown | null> {
     const record = this.store.get(idempotencyKey);
     if (!record) return null;
@@ -30,10 +35,6 @@ export class MemoryIdempotencyStore implements IdempotencyStore {
     if (Date.now() - record.timestamp > this.maxCacheAgeMs) {
       this.store.delete(idempotencyKey);
       return null;
-    }
-
-    if (record.status === 'sent') {
-      return record.result;
     }
 
     return record;
@@ -88,7 +89,8 @@ export class MemoryIdempotencyStore implements IdempotencyStore {
 export class RedisIdempotencyStore implements IdempotencyStore {
   private client: any;
   private readonly ttlSeconds: number;
-  private readonly isConnected: boolean;
+  private isConnected: boolean = false;
+  private connectionChecked: boolean = false;
 
   constructor(redisUrl: string, redisToken: string, ttlSeconds: number = 604800) {
     this.ttlSeconds = ttlSeconds;
@@ -96,8 +98,32 @@ export class RedisIdempotencyStore implements IdempotencyStore {
       const { Redis } = require('@upstash/redis');
       this.client = new Redis({ url: redisUrl, token: redisToken });
       this.isConnected = true;
-    } catch {
+      console.log(`[Redis] Client created with url=${redisUrl.substring(0, 20)}...`);
+    } catch (e) {
+      console.error(`[Redis] Client creation failed:`, e);
       this.isConnected = false;
+    }
+  }
+
+  async ensureConnected(): Promise<boolean> {
+    if (this.connectionChecked) return this.isConnected;
+
+    if (!this.client) {
+      this.isConnected = false;
+      return false;
+    }
+
+    try {
+      const result = await this.client.ping();
+      console.log(`[Redis] Ping result: ${result}`);
+      this.isConnected = true;
+      this.connectionChecked = true;
+      return true;
+    } catch (e) {
+      console.error(`[Redis] Connection test failed:`, e);
+      this.isConnected = false;
+      this.connectionChecked = true;
+      return false;
     }
   }
 
@@ -105,26 +131,30 @@ export class RedisIdempotencyStore implements IdempotencyStore {
     return this.isConnected;
   }
 
-  private buildKey(toolName: string, chatId: string, idempotencyKey: string): string {
-    return `feishu-mcp:${toolName}:${chatId}:${idempotencyKey}`;
+  getStoreType(): 'memory' | 'redis' {
+    return 'redis';
   }
 
   async get(idempotencyKey: string): Promise<unknown | null> {
+    await this.ensureConnected();
     if (!this.isConnected) return null;
     try {
       const value = await this.client.get(idempotencyKey);
-      if (!value) return null;
-      const record = JSON.parse(value) as IdempotencyRecord;
-      if (record.status === 'sent') {
-        return record.result;
+      if (!value) {
+        console.log(`[Redis] get key=${idempotencyKey} result=null`);
+        return null;
       }
+      const record = value as IdempotencyRecord;
+      console.log(`[Redis] get key=${idempotencyKey} status=${record.status}`);
       return record;
-    } catch {
+    } catch (e) {
+      console.error(`[Redis] get error key=${idempotencyKey}:`, e);
       return null;
     }
   }
 
   async set(idempotencyKey: string, result: unknown): Promise<void> {
+    await this.ensureConnected();
     if (!this.isConnected) return;
     try {
       const record: IdempotencyRecord = {
@@ -132,33 +162,37 @@ export class RedisIdempotencyStore implements IdempotencyStore {
         result,
         timestamp: Date.now(),
       };
-      await this.client.set(idempotencyKey, JSON.stringify(record), {
-        nx: false,
+      console.log(`[Redis] set key=${idempotencyKey} status=sent`);
+      await this.client.set(idempotencyKey, record, {
         ex: this.ttlSeconds,
       });
-    } catch {
-      // Redis errors are silent in set operations
+    } catch (e) {
+      console.error(`[Redis] set error key=${idempotencyKey}:`, e);
     }
   }
 
   async setProcessing(idempotencyKey: string): Promise<boolean> {
+    await this.ensureConnected();
     if (!this.isConnected) return false;
     try {
       const record: IdempotencyRecord = {
         status: 'processing',
         timestamp: Date.now(),
       };
-      const result = await this.client.set(idempotencyKey, JSON.stringify(record), {
+      const result = await this.client.set(idempotencyKey, record, {
         nx: true,
         ex: 60,
       });
+      console.log(`[Redis] setProcessing key=${idempotencyKey} result=${result}`);
       return result === 'OK';
-    } catch {
+    } catch (e) {
+      console.error(`[Redis] setProcessing error key=${idempotencyKey}:`, e);
       return false;
     }
   }
 
   async setFailed(idempotencyKey: string, error: string): Promise<void> {
+    await this.ensureConnected();
     if (!this.isConnected) return;
     try {
       const record: IdempotencyRecord = {
@@ -166,8 +200,7 @@ export class RedisIdempotencyStore implements IdempotencyStore {
         error,
         timestamp: Date.now(),
       };
-      await this.client.set(idempotencyKey, JSON.stringify(record), {
-        nx: false,
+      await this.client.set(idempotencyKey, record, {
         ex: this.ttlSeconds,
       });
     } catch {
@@ -176,6 +209,7 @@ export class RedisIdempotencyStore implements IdempotencyStore {
   }
 
   async delete(idempotencyKey: string): Promise<void> {
+    await this.ensureConnected();
     if (!this.isConnected) return;
     try {
       await this.client.del(idempotencyKey);
@@ -199,16 +233,42 @@ export class RedisIdempotencyStore implements IdempotencyStore {
   }
 }
 
-export function createIdempotencyStore(): IdempotencyStore {
-  const redisUrl = process.env.UPSTASH_REDIS_REST_URL?.trim();
-  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+export function getRedisConfig(): { url: string | null; token: string | null; ttlSeconds: number } {
   const ttlSeconds = parseInt(process.env.IDEMPOTENCY_TTL_SECONDS || '604800', 10);
 
-  if (redisUrl && redisToken) {
-    return new RedisIdempotencyStore(redisUrl, redisToken, ttlSeconds);
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim() ||
+              process.env.UPSTASH_REDIS_REST_KV_REST_API_URL?.trim() ||
+              null;
+
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim() ||
+                process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN?.trim() ||
+                null;
+
+  return { url, token, ttlSeconds };
+}
+
+export function isProduction(): boolean {
+  return process.env.VERCEL_ENV === 'production' ||
+         process.env.NODE_ENV === 'production';
+}
+
+export function isLocalDevelopment(): boolean {
+  return process.env.NODE_ENV === 'development' ||
+         !process.env.VERCEL_ENV;
+}
+
+export function createIdempotencyStore(): IdempotencyStore {
+  if (isLocalDevelopment()) {
+    return new MemoryIdempotencyStore();
   }
 
-  return new MemoryIdempotencyStore();
+  const { url, token, ttlSeconds } = getRedisConfig();
+
+  if (url && token) {
+    return new RedisIdempotencyStore(url, token, ttlSeconds);
+  }
+
+  throw new Error("Redis configuration is required for non-local environments");
 }
 
 export { MemoryIdempotencyStore as __DEV_ONLY_MemoryIdempotencyStore };
